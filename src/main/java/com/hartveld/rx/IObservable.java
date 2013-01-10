@@ -11,15 +11,13 @@ public interface IObservable<T> {
 	AutoCloseable subscribe(Procedure1<T> onNext, Procedure1<Throwable> onError, Procedure onCompleted);
 
 	default IObservable<T> observeOn(ExecutorService svc) {
-		return new IObservable<T>() {
-			@Override public AutoCloseable subscribe(Procedure1<T> onNext, Procedure1<Throwable> onError, Procedure onCompleted) {
-				Procedure1<T> scheduledOnNext = e -> svc.execute(() -> onNext.procedure(e));
-				Procedure1<Throwable> scheduledOnError = e -> svc.execute(() -> onError.procedure(e));
-				Procedure scheduledOnCompleted = () -> svc.execute(() -> onCompleted.procedure());
-
-				final AutoCloseable ac = IObservable.this.subscribe(scheduledOnNext, scheduledOnError, scheduledOnCompleted);
-				return () -> ac.close();
-			}
+		return (onNext, onError, onCompleted) -> {
+			final AutoCloseable ac = IObservable.this.subscribe(
+				e -> svc.execute(() -> onNext.procedure(e)),
+				e -> svc.execute(() -> onError.procedure(e)),
+				() -> svc.execute(() -> onCompleted.procedure())
+			);
+			return () -> ac.close();
 		};
 	}
 
