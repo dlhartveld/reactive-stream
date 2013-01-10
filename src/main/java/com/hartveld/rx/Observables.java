@@ -12,9 +12,7 @@ public class Observables {
 
 				onCompleted.procedure();
 
-				return new AutoCloseable() {
-					@Override public void close() { }
-				};
+				return () -> { };
 			}
 		};
 	}
