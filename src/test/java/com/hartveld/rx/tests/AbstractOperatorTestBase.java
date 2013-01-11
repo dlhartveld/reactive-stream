@@ -9,6 +9,8 @@ public abstract class AbstractOperatorTestBase {
 
 	protected boolean gotHello;
 	protected boolean gotWorld;
+
+	protected boolean gotError;
 	protected boolean completed;
 
 	@Before
@@ -16,6 +18,7 @@ public abstract class AbstractOperatorTestBase {
 		gotHello = false;
 		gotWorld = false;
 
+		gotError = false;
 		completed = false;
 	}
 
