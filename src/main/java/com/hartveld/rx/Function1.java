@@ -1,5 +1,5 @@
 package com.hartveld.rx;
 
-public interface Function<R, T> {
+public interface Function1<R, T> {
 	R function(T value);
 }
