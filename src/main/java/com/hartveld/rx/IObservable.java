@@ -3,6 +3,7 @@ package com.hartveld.rx;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +12,41 @@ public interface IObservable<T> {
 	static final Logger LOG = LoggerFactory.getLogger(IObservable.class);
 
 	AutoCloseable subscribe(Procedure1<T> onNext, Procedure1<Throwable> onError, Procedure onCompleted);
+
+	/**
+	 * Select from observations that which is of interesting nature.
+	 *
+	 * @param selector The function used to do the selection.
+	 *
+	 * @return A new {@link IObservable} that forwards the result of the application of the selector to each observation.
+	 */
+	default <R> IObservable<R> select(Function1<R, T> selector) {
+		checkNotNull(selector, "selector must be non-null");
+
+		return (onNext, onError, onCompleted) -> {
+			AtomicBoolean errored = new AtomicBoolean(false);
+			AutoCloseable ac = subscribe(
+				e -> {
+					if (errored.get()) return;
+					try {
+						onNext.procedure(selector.function(e));
+					} catch (Throwable t) {
+						errored.set(true);
+						onError.procedure(t);
+					}
+				},
+				e -> {
+					if (errored.get()) return;
+					onError.procedure(e);
+				},
+				() -> {
+					if (errored.get()) return;
+					onCompleted.procedure();
+				}
+			);
+			return () -> ac.close();
+		};
+	}
 
 	/**
 	 * Execute observations with the given executor.
@@ -25,7 +61,7 @@ public interface IObservable<T> {
 		checkNotNull(executor, "executor must be non-null");
 
 		return (onNext, onError, onCompleted) -> {
-			AutoCloseable ac = IObservable.this.subscribe(
+			AutoCloseable ac = subscribe(
 				e -> executor.execute(() -> onNext.procedure(e)),
 				e -> executor.execute(() -> onError.procedure(e)),
 				() -> executor.execute(() -> onCompleted.procedure())
@@ -46,7 +82,7 @@ public interface IObservable<T> {
 			FutureAutoCloseable futureAC = new FutureAutoCloseable();
 
 			executor.execute(() -> {
-					futureAC.set(IObservable.this.subscribe(
+					futureAC.set(subscribe(
 						e -> onNext.procedure(e),
 						e -> onError.procedure(e),
 						() -> onCompleted.procedure()
