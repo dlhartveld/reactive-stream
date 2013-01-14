@@ -11,6 +11,11 @@ import org.junit.Test;
 
 public class MapTest extends AbstractOperatorTestBase {
 
+	@Override
+	protected IObservable<String> getTestableObservableFrom(IObservable<String> o) {
+		return o.map(s -> s);
+	}
+
 	@Test
 	public void testThatMapOperatorWorks() throws Exception {
 		IObservable<String> source = Observables.observableOf(hello, world);

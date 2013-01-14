@@ -1,15 +1,25 @@
 package com.hartveld.rx.tests.operators;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
-import com.hartveld.rx.*;
-import java.util.concurrent.*;
-import org.junit.*;
+import com.hartveld.rx.IObservable;
+import com.hartveld.rx.Observables;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
+import org.junit.Test;
 
 import com.hartveld.rx.tests.*;
 
 public class ObserveOnTest extends AbstractOperatorTestBase {
+
+	@Override
+	protected IObservable<String> getTestableObservableFrom(IObservable<String> o) {
+		return o.observeOn(new SynchronousExecutorService());
+	}
 
 	@Test
 	public void testThatObserverIsNotifiedOnBackgroundThreadWithObserveOn() throws Exception {

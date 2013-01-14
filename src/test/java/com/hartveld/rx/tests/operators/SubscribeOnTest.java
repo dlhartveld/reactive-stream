@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import com.hartveld.rx.IObservable;
 import com.hartveld.rx.Observables;
 import com.hartveld.rx.tests.AbstractOperatorTestBase;
+import com.hartveld.rx.tests.SynchronousExecutorService;
 import java.util.concurrent.Executor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -18,6 +19,11 @@ public class SubscribeOnTest extends AbstractOperatorTestBase {
 
 	@Mock
 	private Executor executor;
+
+	@Override
+	protected IObservable<String> getTestableObservableFrom(IObservable<String> o) {
+		return o.subscribeOn(new SynchronousExecutorService());
+	}
 
 	@Test
 	public void testThatSubscriptionAfterSubscribeOnIsExecutedThroughExecutor() throws Exception {

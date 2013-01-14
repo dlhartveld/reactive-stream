@@ -13,6 +13,10 @@ public interface IObservable<T> {
 
 	AutoCloseable subscribe(Procedure1<T> onNext, Procedure1<Throwable> onError, Procedure onCompleted);
 
+	default AutoCloseable subscribe(IObserver<T> observer) {
+		return subscribe(observer::onNext, observer::onError, observer::onCompleted);
+	}
+
 	/**
 	 * Map observations through a mapping function to new other observations.
 	 *
@@ -41,6 +45,7 @@ public interface IObservable<T> {
 				},
 				e -> {
 					if (stopped.get()) return;
+					stopped.set(true);
 					onError.procedure(e);
 				},
 				() -> {
@@ -68,8 +73,10 @@ public interface IObservable<T> {
 		checkNotNull(executor, "executor must be non-null");
 
 		return (onNext, onError, onCompleted) -> {
+			AtomicBoolean stopped = new AtomicBoolean(false);
 			AutoCloseable ac = subscribe(
 				e -> {
+					if(stopped.get()) return;
 					LOG.trace("Executing onNext asynchronously for: {}", e);
 					executor.execute(() -> {
 						LOG.trace("onNext({}) (asynchronously called)", e);
@@ -77,16 +84,20 @@ public interface IObservable<T> {
 					});
 				},
 				e -> {
+					if(stopped.get()) return;
 					LOG.trace("Executing onError asynchronously for: {}", e);
 					executor.execute(() -> {
 						LOG.trace("onNext({}) (asynchronously called)", e);
+						stopped.set(true);
 						onError.procedure(e);
 					});
 				},
 				() -> {
+					if(stopped.get()) return;
 					LOG.trace("Executing onCompleted asynchronously...");
 					executor.execute(() -> {
 						LOG.trace("onCompleted() (asynchronously called)");
+						stopped.set(true);
 						onCompleted.procedure();
 					});
 				}
@@ -106,14 +117,26 @@ public interface IObservable<T> {
 		LOG.trace("subscribeOn({})", executor);
 
 		return (onNext, onError, onCompleted) -> {
+			AtomicBoolean stopped = new AtomicBoolean(false);
 			FutureAutoCloseable futureAC = new FutureAutoCloseable();
 
 			executor.execute(() -> {
 					LOG.trace("Executing asynchronous subscription");
 					futureAC.set(subscribe(
-						e -> onNext.procedure(e),
-						e -> onError.procedure(e),
-						() -> onCompleted.procedure()
+						e -> {
+							if(stopped.get()) return;
+							onNext.procedure(e);
+						},
+						e -> {
+							if(stopped.get()) return;
+							onError.procedure(e);
+							stopped.set(true);
+						},
+						() -> {
+							if(stopped.get()) return;
+							onCompleted.procedure();
+							stopped.set(true);
+						}
 					));
 				}
 			);
