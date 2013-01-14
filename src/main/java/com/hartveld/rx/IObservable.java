@@ -14,16 +14,16 @@ public interface IObservable<T> {
 	AutoCloseable subscribe(Procedure1<T> onNext, Procedure1<Throwable> onError, Procedure onCompleted);
 
 	/**
-	 * Select from observations that which is of interesting nature.
+	 * Map observations through a mapping function to new other observations.
 	 *
-	 * @param selector The function used to do the selection.
+	 * @param mapper The function used to do the mapping.
 	 *
-	 * @return A new {@link IObservable} that forwards the result of the application of the selector to each observation.
+	 * @return A new {@link IObservable} that forwards the result of the application of the mapper to each observation to client subscriptions.
 	 */
-	default <R> IObservable<R> select(Function1<R, T> selector) {
-		LOG.trace("select()");
+	default <R> IObservable<R> map(Function1<R, T> mapper) {
+		LOG.trace("map()");
 
-		checkNotNull(selector, "selector must be non-null");
+		checkNotNull(mapper, "mapper must be non-null");
 
 		return (onNext, onError, onCompleted) -> {
 			AtomicBoolean stopped = new AtomicBoolean(false);
@@ -31,7 +31,7 @@ public interface IObservable<T> {
 				e -> {
 					if (stopped.get()) return;
 					try {
-						R inner = selector.function(e);
+						R inner = mapper.function(e);
 						onNext.procedure(inner);
 					} catch (RuntimeException ex) {
 						LOG.trace("Caught exception: {}", ex.getMessage(), ex);

@@ -9,13 +9,13 @@ import com.hartveld.rx.Observables;
 import com.hartveld.rx.tests.AbstractOperatorTestBase;
 import org.junit.Test;
 
-public class SelectOperatorTest extends AbstractOperatorTestBase {
+public class MapTest extends AbstractOperatorTestBase {
 
 	@Test
-	public void testThatSelectOperatorWorks() throws Exception {
+	public void testThatMapOperatorWorks() throws Exception {
 		IObservable<String> source = Observables.observableOf(hello, world);
 
-		AutoCloseable subscription = source.select(x -> x.charAt(0)).subscribe(
+		AutoCloseable subscription = source.map(x -> x.charAt(0)).subscribe(
 			e -> {
 				switch(e) {
 					case 'H':
@@ -41,10 +41,10 @@ public class SelectOperatorTest extends AbstractOperatorTestBase {
 	}
 
 	@Test
-	public void testThatSelectOperatorHandlesExceptionCorrectly() throws Exception {
+	public void testThatMapOperatorHandlesExceptionCorrectly() throws Exception {
 		IObservable<String> source = Observables.observableOf(hello, world);
 
-		AutoCloseable subscription = source.select(x -> x.charAt(5)).subscribe(
+		AutoCloseable subscription = source.map(x -> x.charAt(5)).subscribe(
 			e -> fail("Got element: " + e),
 			e -> gotError = true,
 			() -> fail("Got completed")
