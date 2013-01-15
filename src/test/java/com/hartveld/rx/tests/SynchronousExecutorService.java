@@ -11,6 +11,9 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public class SynchronousExecutorService implements ExecutorService {
 
 	private boolean shutdown = false;
@@ -100,6 +103,11 @@ public class SynchronousExecutorService implements ExecutorService {
 	@Override
 	public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) {
 		throw new RuntimeException("Method not implemented");
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).toString();
 	}
 
 }
