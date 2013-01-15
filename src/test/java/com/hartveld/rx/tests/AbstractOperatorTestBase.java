@@ -86,4 +86,7 @@ public abstract class AbstractOperatorTestBase {
 		verifyNoMoreInteractions(target);
 	}
 
+	// TODO: testThatErrorAfterCompletedIsIgnored
+	// TODO: testThatCompletedAfterErrorIsIgnored
+
 }
