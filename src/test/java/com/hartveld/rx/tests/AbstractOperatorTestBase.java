@@ -55,9 +55,9 @@ public abstract class AbstractOperatorTestBase {
 	@Test
 	public void testThatObservationsAfterErrorAreIgnored() {
 		IObservable<String> source = (onNext, onError, onCompleted) -> {
-			onNext.procedure(hello);
-			onError.procedure(expectedException);
-			onNext.procedure(world);
+			onNext.accept(hello);
+			onError.accept(expectedException);
+			onNext.accept(world);
 
 			return () -> { };
 		};

@@ -4,6 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Block;
+import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +13,42 @@ public interface IObservable<T> {
 
 	static final Logger LOG = LoggerFactory.getLogger(IObservable.class);
 
-	AutoCloseable subscribe(Procedure1<T> onNext, Procedure1<Throwable> onError, Procedure onCompleted);
+	AutoCloseable subscribe(Block<T> onNext, Block<Throwable> onError, Procedure onCompleted);
 
 	default AutoCloseable subscribe(IObserver<T> observer) {
 		return subscribe(observer::onNext, observer::onError, observer::onCompleted);
+	}
+
+	/**
+	 * The identity function, i.e. every observation is forwarded as-is.
+	 * <p>
+	 * This function can for example come in handy during testing.
+	 *
+	 * @return The new {@link IObservable} that forwards all observations.
+	 */
+	default IObservable<T> id() {
+		LOG.trace("id()");
+
+		return (onNext, onError, onCompleted) -> {
+			AtomicBoolean stopped = new AtomicBoolean(false);
+			AutoCloseable ac = subscribe(
+				el -> {
+					if (stopped.get()) return;
+					onNext.accept(el);
+				},
+				ex -> {
+					if (stopped.get()) return;
+					stopped.set(true);
+					onError.accept(ex);
+				},
+				() -> {
+					if (stopped.get()) return;
+					stopped.set(true);
+					onCompleted.procedure();
+				}
+			);
+			return () -> ac.close();
+		};
 	}
 
 	/**
@@ -24,7 +58,7 @@ public interface IObservable<T> {
 	 *
 	 * @return A new {@link IObservable} that forwards the result of the application of the mapper to each observation to client subscriptions.
 	 */
-	default <R> IObservable<R> map(Function1<R, T> mapper) {
+	default <R> IObservable<R> map(Function<T, R> mapper) {
 		LOG.trace("map()");
 
 		checkNotNull(mapper, "mapper must be non-null");
@@ -35,18 +69,18 @@ public interface IObservable<T> {
 				e -> {
 					if (stopped.get()) return;
 					try {
-						R inner = mapper.function(e);
-						onNext.procedure(inner);
+						R inner = mapper.apply(e);
+						onNext.accept(inner);
 					} catch (RuntimeException ex) {
 						LOG.trace("Caught exception: {}", ex.getMessage(), ex);
 						stopped.set(true);
-						onError.procedure(ex);
+						onError.accept(ex);
 					}
 				},
 				e -> {
 					if (stopped.get()) return;
 					stopped.set(true);
-					onError.procedure(e);
+					onError.accept(e);
 				},
 				() -> {
 					if (stopped.get()) return;
@@ -80,7 +114,7 @@ public interface IObservable<T> {
 					LOG.trace("Executing onNext asynchronously for: {}", e);
 					executor.execute(() -> {
 						LOG.trace("onNext({}) (asynchronously called)", e);
-						onNext.procedure(e);
+						onNext.accept(e);
 					});
 				},
 				e -> {
@@ -89,7 +123,7 @@ public interface IObservable<T> {
 					executor.execute(() -> {
 						LOG.trace("onNext({}) (asynchronously called)", e);
 						stopped.set(true);
-						onError.procedure(e);
+						onError.accept(e);
 					});
 				},
 				() -> {
@@ -125,11 +159,11 @@ public interface IObservable<T> {
 					futureAC.set(subscribe(
 						e -> {
 							if(stopped.get()) return;
-							onNext.procedure(e);
+							onNext.accept(e);
 						},
 						e -> {
 							if(stopped.get()) return;
-							onError.procedure(e);
+							onError.accept(e);
 							stopped.set(true);
 						},
 						() -> {
