@@ -103,6 +103,21 @@ public abstract class AbstractOperatorTestBase {
 		verifyNoMoreInteractions(target);
 	}
 
-	// TODO: testThatCompletedAfterErrorIsIgnored
+	@Test
+	public void testThatCompletedAfterErrorIsIgnored () {
+		IObservable<String> source = (onNext, onError, onCompleted) -> {
+			onNext.accept(hello);
+			onError.accept(expectedException);
+			onCompleted.procedure();
+
+			return () -> { };
+		};
+
+		getTestableObservableFrom(source).subscribe(target);
+
+		verify(target).onNext(hello);
+		verify(target).onError(expectedException);
+		verifyNoMoreInteractions(target);
+	}
 
 }
