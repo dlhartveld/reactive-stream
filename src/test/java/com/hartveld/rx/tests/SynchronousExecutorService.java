@@ -69,7 +69,7 @@ public class SynchronousExecutorService implements ExecutorService {
 			throw new RejectedExecutionException("Synchronous executor service is already shut down.");
 		}
 
-		FutureTask<T> futureTask = new FutureTask<T>(task, result);
+		FutureTask<T> futureTask = new FutureTask<>(task, result);
 		futureTask.run();
 		return futureTask;
 	}
@@ -80,7 +80,7 @@ public class SynchronousExecutorService implements ExecutorService {
 			throw new RejectedExecutionException("Synchronous executor service is already shut down.");
 		}
 
-		FutureTask<?> futureTask = new FutureTask<Object>(task, null);
+		FutureTask<?> futureTask = new FutureTask<>(task, null);
 		task.run();
 		return futureTask;
 	}
