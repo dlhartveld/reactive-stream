@@ -2,11 +2,9 @@ package com.hartveld.rx.tests;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
 import com.hartveld.rx.IObservable;
 import com.hartveld.rx.IObserver;
-import com.hartveld.rx.Observables;
 import java.util.concurrent.ExecutorService;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;

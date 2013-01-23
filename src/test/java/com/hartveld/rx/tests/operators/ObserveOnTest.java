@@ -7,12 +7,12 @@ import static org.junit.Assert.fail;
 
 import com.hartveld.rx.IObservable;
 import com.hartveld.rx.Observables;
+import com.hartveld.rx.tests.AbstractOperatorTestBase;
+import com.hartveld.rx.tests.SynchronousExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
-
-import com.hartveld.rx.tests.*;
 
 public class ObserveOnTest extends AbstractOperatorTestBase {
 

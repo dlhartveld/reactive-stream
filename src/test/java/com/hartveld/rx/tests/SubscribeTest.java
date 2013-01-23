@@ -6,7 +6,6 @@ import static org.junit.Assert.fail;
 
 import com.hartveld.rx.IObservable;
 import com.hartveld.rx.Observables;
-import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Test;
 
 public class SubscribeTest extends AbstractOperatorTestBase {
