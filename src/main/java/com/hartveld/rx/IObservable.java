@@ -6,6 +6,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Block;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,7 @@ public interface IObservable<T> {
 
 	static final Logger LOG = LoggerFactory.getLogger(IObservable.class);
 
-	AutoCloseable subscribe(Block<T> onNext, Block<Throwable> onError, Procedure onCompleted);
+	AutoCloseable subscribe(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted);
 
 	default AutoCloseable subscribe(IObserver<T> observer) {
 		return subscribe(observer::onNext, observer::onError, observer::onCompleted);
@@ -44,7 +45,7 @@ public interface IObservable<T> {
 				() -> {
 					if (stopped.get()) return;
 					stopped.set(true);
-					onCompleted.procedure();
+					onCompleted.run();
 				}
 			);
 			return () -> ac.close();
@@ -85,7 +86,7 @@ public interface IObservable<T> {
 				() -> {
 					if (stopped.get()) return;
 					stopped.set(true);
-					onCompleted.procedure();
+					onCompleted.run();
 				}
 			);
 			return () -> ac.close();
@@ -132,7 +133,7 @@ public interface IObservable<T> {
 					executor.execute(() -> {
 						LOG.trace("onCompleted() (asynchronously called)");
 						stopped.set(true);
-						onCompleted.procedure();
+						onCompleted.run();
 					});
 				}
 			);
@@ -168,7 +169,7 @@ public interface IObservable<T> {
 						},
 						() -> {
 							if(stopped.get()) return;
-							onCompleted.procedure();
+							onCompleted.run();
 							stopped.set(true);
 						}
 					));

@@ -34,7 +34,7 @@ public abstract class AbstractOperatorTestBase {
 	protected abstract IObservable<String> getTestableObservableFrom(IObservable<String> o);
 
 	@Mock
-	private IObserver<String> target;
+	protected IObserver<String> target;
 
 	@Before
 	public void setUp() {
@@ -73,7 +73,7 @@ public abstract class AbstractOperatorTestBase {
 	public void testThatObservationsAfterCompletedAreIgnored() {
 		IObservable<String> source = (onNext, onError, onCompleted) -> {
 			onNext.accept(hello);
-			onCompleted.procedure();
+			onCompleted.run();
 			onNext.accept(world);
 
 			return () -> { };
@@ -90,7 +90,7 @@ public abstract class AbstractOperatorTestBase {
 	public void testThatErrorAfterCompletedIsIgnored () {
 		IObservable<String> source = (onNext, onError, onCompleted) -> {
 			onNext.accept(hello);
-			onCompleted.procedure();
+			onCompleted.run();
 			onError.accept(expectedException);
 
 			return () -> { };
@@ -108,7 +108,7 @@ public abstract class AbstractOperatorTestBase {
 		IObservable<String> source = (onNext, onError, onCompleted) -> {
 			onNext.accept(hello);
 			onError.accept(expectedException);
-			onCompleted.procedure();
+			onCompleted.run();
 
 			return () -> { };
 		};
