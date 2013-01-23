@@ -94,6 +94,42 @@ public interface IObservable<T> {
 	}
 
 	/**
+	 * Filter observations based on given predicate.
+	 *
+	 * @param predicate The {@link Predicate} against which each observation is tested. Must be non-<code>null</code>.
+	 *
+	 * @return A new {@link IObservable} that filters observations against the given predicate.
+	 */
+	default IObservable<T> filter(Predicate<T> predicate) {
+		LOG.trace("filter()");
+
+		checkNotNull(predicate, "predicate must be non-null");
+
+		return (onNext, onError, onCompleted) -> {
+			AtomicBoolean stopped = new AtomicBoolean(false);
+			AutoCloseable ac = subscribe(
+				el -> {
+					if (stopped.get()) return;
+					if (predicate.test(el)) {
+						onNext.accept(el);
+					}
+				},
+				ex -> {
+					if (stopped.get()) return;
+					stopped.set(true);
+					onError.accept(ex);
+				},
+				() -> {
+					if (stopped.get()) return;
+					stopped.set(true);
+					onCompleted.run();
+				}
+			);
+			return () -> ac.close();
+		};
+	}
+
+	/**
 	 * Execute observations with the given executor.
 	 * <p>
 	 * This operator can be used to schedule the execution of observations on another thread, for example to run them on a background thread.
