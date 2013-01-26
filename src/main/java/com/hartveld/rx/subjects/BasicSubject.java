@@ -13,9 +13,26 @@ public class BasicSubject<T> implements ISubject<T> {
 	@SuppressWarnings("FieldNameHidesFieldInSuperclass")
 	private static final Logger LOG = LoggerFactory.getLogger(BasicSubject.class);
 
+	// TODO: Change to a concurrent list.
 	private Map<AutoCloseable, IObserver<T>> observers = new ConcurrentHashMap<>();
 
 	private boolean stopped = false;
+
+	@Override
+	public AutoCloseable subscribe(IObserver<T> observer) {
+		LOG.trace("Subscribing new observer: {}", observer);
+
+		FutureAutoCloseable fac = new FutureAutoCloseable();
+		fac.set (() -> {
+			if (observers.containsKey(fac)) {
+				observers.remove(fac);
+			}
+		});
+
+		observers.put(fac, observer);
+
+		return fac;
+	}
 
 	@Override
 	public AutoCloseable subscribe(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted) {
@@ -38,17 +55,7 @@ public class BasicSubject<T> implements ISubject<T> {
 			};
 		};
 
-		final FutureAutoCloseable ac = new FutureAutoCloseable();
-
-		ac.set(() -> {
-			if (observers.containsKey(ac)) {
-				observers.remove(ac);
-			}
-		});
-
-		observers.put(ac, observer);
-
-		return ac;
+		return this.subscribe(observer);
 	}
 
 	@Override
@@ -73,7 +80,7 @@ public class BasicSubject<T> implements ISubject<T> {
 		}
 
 		stopped = true;
-		
+
 		for (IObserver<T> observer : observers.values()) {
 			observer.onError(cause);
 		}

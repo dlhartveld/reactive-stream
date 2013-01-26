@@ -1,5 +1,6 @@
 package com.hartveld.rx.subjects;
 
+import com.hartveld.rx.IObserver;
 import java.util.function.Block;
 
 public class BehaviorSubject<T> extends BasicSubject<T> {
@@ -51,9 +52,24 @@ public class BehaviorSubject<T> extends BasicSubject<T> {
 	}
 
 	@Override
+	public AutoCloseable subscribe(IObserver<T> observer) {
+		final AutoCloseable ac = super.subscribe(observer);
+
+		onSubscription(observer::onNext, observer::onError, observer::onCompleted);
+
+		return ac;
+	}
+
+	@Override
 	public AutoCloseable subscribe(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted) {
 		final AutoCloseable ac = super.subscribe(onNext, onError, onCompleted);
 
+		onSubscription(onNext, onError, onCompleted);
+
+		return ac;
+	}
+
+	private void onSubscription(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted) throws IllegalStateException {
 		if (current != null) {
 			onNext.accept(current);
 		} else if (error != null) {
@@ -63,8 +79,6 @@ public class BehaviorSubject<T> extends BasicSubject<T> {
 		} else {
 			throw new IllegalStateException("Behavior subject is in undefined state");
 		}
-
-		return ac;
 	}
 
 }
