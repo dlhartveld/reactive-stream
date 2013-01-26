@@ -14,8 +14,24 @@ public interface IObservable<T> {
 
 	static final Logger LOG = LoggerFactory.getLogger(IObservable.class);
 
+	/**
+	 * Subscribe to this {@link IObservable}.
+	 *
+	 * @param onNext The {@link Block} that is called when a new value is available. Must be non-<code>null</code>.
+	 * @param onError The {@link Block} that is called when an error occurs. Must be non-<code>null</code>.
+	 * @param onCompleted The {@link Runnable} that is called when the final value has been observed. Must be non-<code>null</code>.
+	 *
+	 * @return An {@link AutoCloseable} that can be used to cancel the subscription.
+	 */
 	AutoCloseable subscribe(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted);
 
+	/**
+	 * Subscribe to this {@link IObservable}.
+	 *
+	 * @param observer The observer to subscribe. Must be non-<code>null</code>.
+	 *
+	 * @return The {@link AutoCloseable} that can be used to cancel the subscription.
+	 */
 	default AutoCloseable subscribe(IObserver<T> observer) {
 		return subscribe(observer::onNext, observer::onError, observer::onCompleted);
 	}
