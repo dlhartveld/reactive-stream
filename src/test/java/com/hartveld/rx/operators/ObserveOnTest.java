@@ -1,4 +1,4 @@
-package com.hartveld.rx.tests.operators;
+package com.hartveld.rx.operators;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -6,19 +6,19 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import com.hartveld.rx.IObservable;
+import com.hartveld.rx.IObserver;
 import com.hartveld.rx.Observables;
-import com.hartveld.rx.tests.AbstractOperatorTestBase;
-import com.hartveld.rx.tests.SynchronousExecutorService;
+import com.hartveld.rx.tests.AbstractSubjectObserverTestBase;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
-public class ObserveOnTest extends AbstractOperatorTestBase {
+public class ObserveOnTest extends AbstractSubjectObserverTestBase {
 
 	@Override
-	protected IObservable<String> getTestableObservableFrom(IObservable<String> o) {
-		return o.observeOn(new SynchronousExecutorService());
+	protected void initializeFor(IObservable<String> source, IObserver<String> target) {
+		source.observeOn(super.syncExecSvc).subscribe(target);
 	}
 
 	@Test

@@ -1,28 +1,25 @@
-package com.hartveld.rx.tests.operators;
+package com.hartveld.rx.operators;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 
 import com.hartveld.rx.IObservable;
+import com.hartveld.rx.IObserver;
 import com.hartveld.rx.Observables;
-import com.hartveld.rx.tests.AbstractOperatorTestBase;
-import com.hartveld.rx.tests.SynchronousExecutorService;
+import com.hartveld.rx.tests.AbstractSubjectObserverTestBase;
 import java.util.concurrent.Executor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(MockitoJUnitRunner.class)
-public class SubscribeOnTest extends AbstractOperatorTestBase {
+public class SubscribeOnTest extends AbstractSubjectObserverTestBase {
 
 	@Mock
 	private Executor executor;
 
 	@Override
-	protected IObservable<String> getTestableObservableFrom(IObservable<String> o) {
-		return o.subscribeOn(new SynchronousExecutorService());
+	protected void initializeFor(IObservable<String> source, IObserver<String> target) {
+		source.subscribeOn(super.syncExecSvc).subscribe(target);
 	}
 
 	@Test

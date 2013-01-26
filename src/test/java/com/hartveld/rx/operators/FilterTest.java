@@ -1,4 +1,4 @@
-package com.hartveld.rx.tests.operators;
+package com.hartveld.rx.operators;
 
 import static java.util.function.Predicates.alwaysFalse;
 import static java.util.function.Predicates.alwaysTrue;
@@ -6,15 +6,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import com.hartveld.rx.IObservable;
+import com.hartveld.rx.IObserver;
 import com.hartveld.rx.Observables;
-import com.hartveld.rx.tests.AbstractOperatorTestBase;
+import com.hartveld.rx.tests.AbstractSubjectObserverTestBase;
 import org.junit.Test;
 
-public class FilterTest extends AbstractOperatorTestBase {
+public class FilterTest extends AbstractSubjectObserverTestBase {
 
 	@Override
-	public IObservable<String> getTestableObservableFrom(IObservable<String> source) {
-		return source.filter(alwaysTrue());
+	protected void initializeFor(IObservable<String> source, IObserver<String> target) {
+		source.filter(alwaysTrue()).subscribe(target);
 	}
 
 	@Test

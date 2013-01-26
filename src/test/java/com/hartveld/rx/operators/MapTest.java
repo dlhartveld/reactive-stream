@@ -1,19 +1,20 @@
-package com.hartveld.rx.tests.operators;
+package com.hartveld.rx.operators;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import com.hartveld.rx.IObservable;
+import com.hartveld.rx.IObserver;
 import com.hartveld.rx.Observables;
-import com.hartveld.rx.tests.AbstractOperatorTestBase;
+import com.hartveld.rx.tests.AbstractSubjectObserverTestBase;
 import org.junit.Test;
 
-public class MapTest extends AbstractOperatorTestBase {
+public class MapTest extends AbstractSubjectObserverTestBase {
 
 	@Override
-	protected IObservable<String> getTestableObservableFrom(IObservable<String> o) {
-		return o.map(s -> s);
+	protected void initializeFor(IObservable<String> source, IObserver<String> target) {
+		source.map(s -> s).subscribe(target);
 	}
 
 	@Test

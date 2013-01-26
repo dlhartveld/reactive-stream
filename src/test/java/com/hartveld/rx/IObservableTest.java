@@ -1,18 +1,20 @@
-package com.hartveld.rx.tests;
+package com.hartveld.rx;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import com.hartveld.rx.IObservable;
+import com.hartveld.rx.IObserver;
 import com.hartveld.rx.Observables;
+import com.hartveld.rx.tests.AbstractSubjectObserverTestBase;
 import org.junit.Test;
 
-public class SubscribeTest extends AbstractOperatorTestBase {
+public class IObservableTest extends AbstractSubjectObserverTestBase {
 
 	@Override
-	protected IObservable<String> getTestableObservableFrom(IObservable<String> o) {
-		return o.id();
+	protected void initializeFor(IObservable<String> source, IObserver<String> target) {
+		source.id().subscribe(target);
 	}
 
 	@Test
