@@ -2,8 +2,6 @@ package com.hartveld.rx.subjects;
 
 import com.hartveld.rx.IObservable;
 import com.hartveld.rx.IObserver;
-import com.hartveld.rx.subjects.BasicSubject;
-import com.hartveld.rx.subjects.ISubject;
 import com.hartveld.rx.tests.AbstractSubjectObserverTestBase;
 import org.junit.Before;
 
