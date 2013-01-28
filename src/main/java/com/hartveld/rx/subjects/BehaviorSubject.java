@@ -60,15 +60,6 @@ public class BehaviorSubject<T> extends BasicSubject<T> {
 		return ac;
 	}
 
-	@Override
-	public AutoCloseable subscribe(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted) {
-		final AutoCloseable ac = super.subscribe(onNext, onError, onCompleted);
-
-		onSubscription(onNext, onError, onCompleted);
-
-		return ac;
-	}
-
 	private void onSubscription(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted) throws IllegalStateException {
 		if (current != null) {
 			onNext.accept(current);

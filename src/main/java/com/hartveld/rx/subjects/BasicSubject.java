@@ -35,7 +35,7 @@ public class BasicSubject<T> implements ISubject<T> {
 	}
 
 	@Override
-	public AutoCloseable subscribe(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted) {
+	public final AutoCloseable subscribe(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted) {
 		LOG.trace("Subscribing new observer ...");
 
 		final IObserver<T> observer = new IObserver<T> () {
