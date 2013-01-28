@@ -22,8 +22,8 @@ public class ObserverFactory {
 	 *
 	 * @return The newly created {@link IObserver}.
 	 *
-	 * @see {@link IObserver}
-	 * @see {@link IObservable}
+	 * @see IObserver
+	 * @see IObservable
 	 */
 	public static <T> IObserver<T> createObserver(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted) {
 		checkNotNull(onNext, "onNext must be non-null");
