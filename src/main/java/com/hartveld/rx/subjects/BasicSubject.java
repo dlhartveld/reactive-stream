@@ -1,7 +1,7 @@
 package com.hartveld.rx.subjects;
 
+import com.hartveld.rx.ForwardingAutoCloseable;
 import com.hartveld.rx.ForwardingObserver;
-import com.hartveld.rx.FutureAutoCloseable;
 import com.hartveld.rx.IObserver;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,7 +23,7 @@ public class BasicSubject<T> implements ISubject<T> {
 	public AutoCloseable subscribe(IObserver<T> observer) {
 		LOG.trace("Subscribing new observer: {}", observer);
 
-		FutureAutoCloseable fac = new FutureAutoCloseable();
+		ForwardingAutoCloseable fac = new ForwardingAutoCloseable();
 		fac.set(() -> {
 			if (observers.containsKey(fac)) {
 				observers.remove(fac);

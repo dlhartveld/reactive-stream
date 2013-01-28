@@ -205,11 +205,11 @@ public interface IObservable<T> {
 
 		return (onNext, onError, onCompleted) -> {
 			AtomicBoolean stopped = new AtomicBoolean(false);
-			FutureAutoCloseable futureAC = new FutureAutoCloseable();
+			ForwardingAutoCloseable fac = new ForwardingAutoCloseable();
 
 			executor.execute(() -> {
 					LOG.trace("Executing asynchronous subscription");
-					futureAC.set(subscribe(
+					fac.set(subscribe(
 						e -> {
 							if(stopped.get()) return;
 							onNext.accept(e);
@@ -233,7 +233,7 @@ public interface IObservable<T> {
 				executor.execute(() -> {
 					LOG.trace("Executing close...");
 					try {
-						futureAC.close();
+						fac.close();
 					} catch (Exception e) {
 						LOG.trace("Caught exception on close: {}", e.getMessage(), e);
 						// TODO: Create test case for this scenario, then implement a proper handling.

@@ -3,7 +3,7 @@ package com.hartveld.rx;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-public class FutureAutoCloseable implements AutoCloseable {
+public class ForwardingAutoCloseable implements AutoCloseable {
 
 	private AutoCloseable future = null;
 
