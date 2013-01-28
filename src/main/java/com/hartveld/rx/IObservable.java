@@ -192,7 +192,7 @@ public interface IObservable<T> {
 			return () -> ac.close();
 		};
 	}
-	
+
 	/**
 	 * Execute subscription and closing of the subscription with the given executor.
 	 *
