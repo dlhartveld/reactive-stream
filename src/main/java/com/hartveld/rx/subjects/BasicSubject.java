@@ -1,5 +1,6 @@
 package com.hartveld.rx.subjects;
 
+import com.hartveld.rx.ForwardingObserver;
 import com.hartveld.rx.FutureAutoCloseable;
 import com.hartveld.rx.IObserver;
 import java.util.Map;
@@ -23,7 +24,7 @@ public class BasicSubject<T> implements ISubject<T> {
 		LOG.trace("Subscribing new observer: {}", observer);
 
 		FutureAutoCloseable fac = new FutureAutoCloseable();
-		fac.set (() -> {
+		fac.set(() -> {
 			if (observers.containsKey(fac)) {
 				observers.remove(fac);
 			}
@@ -36,26 +37,8 @@ public class BasicSubject<T> implements ISubject<T> {
 
 	@Override
 	public final AutoCloseable subscribe(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted) {
-		LOG.trace("Subscribing new observer ...");
-
-		final IObserver<T> observer = new IObserver<T> () {
-			@Override
-			public void onNext(T value) {
-				onNext.accept(value);
-			}
-
-			@Override
-			public void onError(Throwable cause) {
-				onError.accept(cause);
-			}
-
-			@Override
-			public void onCompleted() {
-				onCompleted.run();
-			};
-		};
-
-		return this.subscribe(observer);
+		LOG.trace("Subscribing new forwarding observer ...");
+		return this.subscribe(new ForwardingObserver<>(onNext, onError, onCompleted));
 	}
 
 	@Override
