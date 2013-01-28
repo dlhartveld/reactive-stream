@@ -48,7 +48,7 @@ public interface IObservable<T> {
 
 		return (onNext, onError, onCompleted) -> {
 			AtomicBoolean stopped = new AtomicBoolean(false);
-			AutoCloseable ac = subscribe(
+			return subscribe(
 				el -> {
 					if (stopped.get()) return;
 					onNext.accept(el);
@@ -64,7 +64,6 @@ public interface IObservable<T> {
 					onCompleted.run();
 				}
 			);
-			return () -> ac.close();
 		};
 	}
 
@@ -82,7 +81,7 @@ public interface IObservable<T> {
 
 		return (onNext, onError, onCompleted) -> {
 			AtomicBoolean stopped = new AtomicBoolean(false);
-			AutoCloseable ac = subscribe(
+			return subscribe(
 				e -> {
 					if (stopped.get()) return;
 					try {
@@ -105,7 +104,6 @@ public interface IObservable<T> {
 					onCompleted.run();
 				}
 			);
-			return () -> ac.close();
 		};
 	}
 
@@ -123,7 +121,7 @@ public interface IObservable<T> {
 
 		return (onNext, onError, onCompleted) -> {
 			AtomicBoolean stopped = new AtomicBoolean(false);
-			AutoCloseable ac = subscribe(
+			return subscribe(
 				el -> {
 					if (stopped.get()) return;
 					if (predicate.test(el)) {
@@ -141,7 +139,6 @@ public interface IObservable<T> {
 					onCompleted.run();
 				}
 			);
-			return () -> ac.close();
 		};
 	}
 
@@ -161,7 +158,7 @@ public interface IObservable<T> {
 
 		return (onNext, onError, onCompleted) -> {
 			AtomicBoolean stopped = new AtomicBoolean(false);
-			AutoCloseable ac = subscribe(
+			return subscribe(
 				e -> {
 					if(stopped.get()) return;
 					LOG.trace("Executing onNext asynchronously for: {}", e);
@@ -189,7 +186,6 @@ public interface IObservable<T> {
 					});
 				}
 			);
-			return () -> ac.close();
 		};
 	}
 
@@ -202,6 +198,8 @@ public interface IObservable<T> {
 	 */
 	default IObservable<T> subscribeOn(Executor executor) {
 		LOG.trace("subscribeOn({})", executor);
+
+		checkNotNull(executor, "executor must be non-null");
 
 		return (onNext, onError, onCompleted) -> {
 			AtomicBoolean stopped = new AtomicBoolean(false);
