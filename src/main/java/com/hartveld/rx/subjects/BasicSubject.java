@@ -1,8 +1,8 @@
 package com.hartveld.rx.subjects;
 
 import com.hartveld.rx.ForwardingAutoCloseable;
-import com.hartveld.rx.ForwardingObserver;
 import com.hartveld.rx.IObserver;
+import com.hartveld.rx.ObserverFactory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Block;
@@ -38,7 +38,7 @@ public class BasicSubject<T> implements ISubject<T> {
 	@Override
 	public final AutoCloseable subscribe(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted) {
 		LOG.trace("Subscribing new forwarding observer ...");
-		return this.subscribe(new ForwardingObserver<>(onNext, onError, onCompleted));
+		return this.subscribe(ObserverFactory.createObserver(onNext, onError, onCompleted));
 	}
 
 	@Override

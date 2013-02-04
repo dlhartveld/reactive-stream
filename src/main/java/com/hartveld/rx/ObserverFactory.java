@@ -30,22 +30,7 @@ public class ObserverFactory {
 		checkNotNull(onError, "onError must be non-null");
 		checkNotNull(onCompleted, "onCompleted must be non-null");
 
-		return new IObserver<T>() {
-			@Override
-			public void onNext(T value) {
-				onNext.accept(value);
-			}
-
-			@Override
-			public void onError(Throwable e) {
-				onError.accept(e);
-			}
-
-			@Override
-			public void onCompleted() {
-				onCompleted.run();
-			}
-		};
+		return new ForwardingObserver<>(onNext, onError, onCompleted);
 	}
 
 	private ObserverFactory() {
