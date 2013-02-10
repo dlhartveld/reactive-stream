@@ -1,11 +1,12 @@
 package com.hartveld.rx;
 
-import java.util.function.Block;
+import java.util.function.Consumer;
 
 public class Observables {
 
+	@SafeVarargs
 	public static <T> IObservable<T> observableOf(T... values) {
-		return (Block<T> onNext, Block<Throwable> onError, Runnable onCompleted) -> {
+		return (Consumer<T> onNext, Consumer<Throwable> onError, Runnable onCompleted) -> {
 
 			for (T value : values) {
 				onNext.accept(value);
@@ -17,6 +18,7 @@ public class Observables {
 		};
 	}
 
-	private Observables() { }
+	private Observables() {
+	}
 
 }

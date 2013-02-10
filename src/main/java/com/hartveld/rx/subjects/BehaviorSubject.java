@@ -1,7 +1,7 @@
 package com.hartveld.rx.subjects;
 
 import com.hartveld.rx.IObserver;
-import java.util.function.Block;
+import java.util.function.Consumer;
 
 public class BehaviorSubject<T> extends BasicSubject<T> {
 
@@ -60,7 +60,7 @@ public class BehaviorSubject<T> extends BasicSubject<T> {
 		return ac;
 	}
 
-	private void onSubscription(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted) throws IllegalStateException {
+	private void onSubscription(Consumer<T> onNext, Consumer<Throwable> onError, Runnable onCompleted) throws IllegalStateException {
 		if (current != null) {
 			onNext.accept(current);
 		} else if (error != null) {

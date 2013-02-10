@@ -2,7 +2,7 @@ package com.hartveld.rx;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.function.Block;
+import java.util.function.Consumer;
 
 /**
  * Factory that creates {@link IObserver}s.
@@ -18,14 +18,14 @@ public class ObserverFactory {
 	 * @param onError     A lambda expression that executes on error notification. Must be non-<code>null</code>. See
 	 *                       also {@link IObserver#onError(java.lang.Throwable)}.
 	 * @param onCompleted A lambda expression that executes on completion of the observable. Must be
-	 *                    non-<code>null</code>. See also {@link IObserver#onCompleted()}.
+	 *                       non-<code>null</code>. See also {@link IObserver#onCompleted()}.
 	 *
 	 * @return The newly created {@link IObserver}.
 	 *
 	 * @see IObserver
 	 * @see IObservable
 	 */
-	public static <T> IObserver<T> createObserver(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted) {
+	public static <T> IObserver<T> createObserver(Consumer<T> onNext, Consumer<Throwable> onError, Runnable onCompleted) {
 		checkNotNull(onNext, "onNext must be non-null");
 		checkNotNull(onError, "onError must be non-null");
 		checkNotNull(onCompleted, "onCompleted must be non-null");

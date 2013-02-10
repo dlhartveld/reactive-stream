@@ -4,7 +4,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Block;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.slf4j.Logger;
@@ -17,13 +19,13 @@ public interface IObservable<T> {
 	/**
 	 * Subscribe to this {@link IObservable}.
 	 *
-	 * @param onNext The {@link Block} that is called when a new value is available. Must be non-<code>null</code>.
-	 * @param onError The {@link Block} that is called when an error occurs. Must be non-<code>null</code>.
+	 * @param onNext The {@link Consumer} that is called when a new value is available. Must be non-<code>null</code>.
+	 * @param onError The {@link Consumer} that is called when an error occurs. Must be non-<code>null</code>.
 	 * @param onCompleted The {@link Runnable} that is called when the final value has been observed. Must be non-<code>null</code>.
 	 *
 	 * @return An {@link AutoCloseable} that can be used to cancel the subscription.
 	 */
-	AutoCloseable subscribe(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted);
+	AutoCloseable subscribe(Consumer<T> onNext, Consumer<Throwable> onError, Runnable onCompleted);
 
 	/**
 	 * Subscribe to this {@link IObservable}.

@@ -5,7 +5,7 @@ import com.hartveld.rx.IObserver;
 import com.hartveld.rx.ObserverFactory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Block;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,10 +13,8 @@ public class BasicSubject<T> implements ISubject<T> {
 
 	@SuppressWarnings("FieldNameHidesFieldInSuperclass")
 	private static final Logger LOG = LoggerFactory.getLogger(BasicSubject.class);
-
 	// TODO: Change to a concurrent list.
 	private Map<AutoCloseable, IObserver<T>> observers = new ConcurrentHashMap<>();
-
 	private boolean stopped = false;
 
 	@Override
@@ -36,7 +34,7 @@ public class BasicSubject<T> implements ISubject<T> {
 	}
 
 	@Override
-	public final AutoCloseable subscribe(Block<T> onNext, Block<Throwable> onError, Runnable onCompleted) {
+	public final AutoCloseable subscribe(Consumer<T> onNext, Consumer<Throwable> onError, Runnable onCompleted) {
 		LOG.trace("Subscribing new forwarding observer ...");
 		return this.subscribe(ObserverFactory.createObserver(onNext, onError, onCompleted));
 	}
