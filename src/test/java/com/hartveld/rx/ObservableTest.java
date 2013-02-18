@@ -10,7 +10,7 @@ import com.hartveld.rx.ObservableFactory;
 import com.hartveld.rx.tests.AbstractSubjectObserverTestBase;
 import org.junit.Test;
 
-public class IObservableTest extends AbstractSubjectObserverTestBase {
+public class ObservableTest extends AbstractSubjectObserverTestBase {
 
 	@Override
 	protected void initializeFor(Observable<String> source, Observer<String> target) {
