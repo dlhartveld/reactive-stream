@@ -7,7 +7,7 @@ import org.junit.Before;
 
 public class BasicSubjectTest extends AbstractSubjectObserverTestBase {
 
-	private ISubject<String> subject;
+	private Subject<String> subject;
 
 	@Before
 	@Override

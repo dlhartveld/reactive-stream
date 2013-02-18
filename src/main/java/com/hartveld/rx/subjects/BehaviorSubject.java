@@ -35,6 +35,7 @@ public class BehaviorSubject<T> extends BasicSubject<T> {
 
 		current = null;
 		error = e;
+		completed = true;
 
 		super.onError(e);
 	}
@@ -47,6 +48,7 @@ public class BehaviorSubject<T> extends BasicSubject<T> {
 
 		current = null;
 		error = null;
+		completed = true;
 
 		super.onCompleted();
 	}

@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BasicSubject<T> implements ISubject<T> {
+public class BasicSubject<T> implements Subject<T> {
 
 	@SuppressWarnings("FieldNameHidesFieldInSuperclass")
 	private static final Logger LOG = LoggerFactory.getLogger(BasicSubject.class);
