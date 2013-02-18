@@ -19,12 +19,16 @@ public abstract class AbstractSubjectObserverTestBase {
 
 	protected static final String hello = "Hello";
 	protected static final String world = "world";
+
 	protected static final RuntimeException expectedException = new RuntimeException("This is expected");
+
 	protected boolean gotHello;
 	protected boolean gotWorld;
 	protected boolean gotError;
 	protected boolean completed;
+
 	protected ExecutorService syncExecSvc;
+
 	@Mock
 	protected IObserver<String> target;
 
@@ -54,7 +58,9 @@ public abstract class AbstractSubjectObserverTestBase {
 			onCompleted.run();
 			return () -> { };
 		};
+
 		initializeFor(source, target);
+
 		verify(target).onNext(hello);
 		verify(target).onError(expectedException);
 		verifyNoMoreInteractions(target);
@@ -68,7 +74,9 @@ public abstract class AbstractSubjectObserverTestBase {
 			onError.accept(expectedException);
 			return () -> { };
 		};
+
 		initializeFor(source, target);
+
 		verify(target).onNext(hello);
 		verify(target).onCompleted();
 		verifyNoMoreInteractions(target);
@@ -82,7 +90,9 @@ public abstract class AbstractSubjectObserverTestBase {
 			onNext.accept(world);
 			return () -> { };
 		};
+
 		initializeFor(source, target);
+
 		verify(target).onNext(hello);
 		verify(target).onCompleted();
 		verifyNoMoreInteractions(target);
@@ -96,7 +106,9 @@ public abstract class AbstractSubjectObserverTestBase {
 			onNext.accept(world);
 			return () -> { };
 		};
+
 		initializeFor(source, target);
+
 		verify(target).onNext(hello);
 		verify(target).onError(expectedException);
 		verifyNoMoreInteractions(target);
