@@ -4,22 +4,22 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import com.hartveld.rx.IObservable;
-import com.hartveld.rx.IObserver;
-import com.hartveld.rx.Observables;
+import com.hartveld.rx.Observable;
+import com.hartveld.rx.Observer;
+import com.hartveld.rx.ObservableFactory;
 import com.hartveld.rx.tests.AbstractSubjectObserverTestBase;
 import org.junit.Test;
 
 public class IObservableTest extends AbstractSubjectObserverTestBase {
 
 	@Override
-	protected void initializeFor(IObservable<String> source, IObserver<String> target) {
+	protected void initializeFor(Observable<String> source, Observer<String> target) {
 		source.id().subscribe(target);
 	}
 
 	@Test
 	public void testThatObserverIsNotifiedBySubjectOnSubscription() throws Exception {
-		IObservable<String> source = Observables.observableOf(hello, world);
+		Observable<String> source = ObservableFactory.observableOf(hello, world);
 		AutoCloseable subscription = source.subscribe(
 			text -> {
 				switch(text) {

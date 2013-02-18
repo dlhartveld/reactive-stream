@@ -1,7 +1,7 @@
 package com.hartveld.rx.subjects;
 
 import com.hartveld.rx.ForwardingAutoCloseable;
-import com.hartveld.rx.IObserver;
+import com.hartveld.rx.Observer;
 import com.hartveld.rx.ObserverFactory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,11 +14,11 @@ public class BasicSubject<T> implements ISubject<T> {
 	@SuppressWarnings("FieldNameHidesFieldInSuperclass")
 	private static final Logger LOG = LoggerFactory.getLogger(BasicSubject.class);
 	// TODO: Change to a concurrent list.
-	private Map<AutoCloseable, IObserver<T>> observers = new ConcurrentHashMap<>();
+	private Map<AutoCloseable, Observer<T>> observers = new ConcurrentHashMap<>();
 	private boolean stopped = false;
 
 	@Override
-	public AutoCloseable subscribe(IObserver<T> observer) {
+	public AutoCloseable subscribe(Observer<T> observer) {
 		LOG.trace("Subscribing new observer: {}", observer);
 
 		ForwardingAutoCloseable fac = new ForwardingAutoCloseable();
@@ -47,7 +47,7 @@ public class BasicSubject<T> implements ISubject<T> {
 			return;
 		}
 
-		for (IObserver<T> observer : observers.values()) {
+		for (Observer<T> observer : observers.values()) {
 			observer.onNext(value);
 		}
 	}
@@ -62,7 +62,7 @@ public class BasicSubject<T> implements ISubject<T> {
 
 		stopped = true;
 
-		for (IObserver<T> observer : observers.values()) {
+		for (Observer<T> observer : observers.values()) {
 			observer.onError(cause);
 		}
 	}
@@ -77,7 +77,7 @@ public class BasicSubject<T> implements ISubject<T> {
 
 		stopped = true;
 
-		for (IObserver<T> observer : observers.values()) {
+		for (Observer<T> observer : observers.values()) {
 			observer.onCompleted();
 		}
 	}

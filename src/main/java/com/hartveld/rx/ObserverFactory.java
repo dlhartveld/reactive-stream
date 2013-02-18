@@ -5,27 +5,27 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.function.Consumer;
 
 /**
- * Factory that creates {@link IObserver}s.
+ * Factory that creates {@link Observer}s.
  */
 public class ObserverFactory {
 
 	/**
-	 * Create a new {@link IObserver} with the given lambda expressions as notification handlers.
+	 * Create a new {@link Observer} with the given lambda expressions as notification handlers.
 	 *
-	 * @param <T>         The type of value that the {@link IObserver} expects.
+	 * @param <T>         The type of value that the {@link Observer} expects.
 	 * @param onNext      A lambda expression that executes on notification for new values. Must be
-	 *                       non-<code>null</code>. See also {@link IObserver#onNext(java.lang.Object)}.
+	 *                       non-<code>null</code>. See also {@link Observer#onNext(java.lang.Object)}.
 	 * @param onError     A lambda expression that executes on error notification. Must be non-<code>null</code>. See
-	 *                       also {@link IObserver#onError(java.lang.Throwable)}.
+	 *                       also {@link Observer#onError(java.lang.Throwable)}.
 	 * @param onCompleted A lambda expression that executes on completion of the observable. Must be
-	 *                       non-<code>null</code>. See also {@link IObserver#onCompleted()}.
+	 *                       non-<code>null</code>. See also {@link Observer#onCompleted()}.
 	 *
-	 * @return The newly created {@link IObserver}.
+	 * @return The newly created {@link Observer}.
 	 *
-	 * @see IObserver
-	 * @see IObservable
+	 * @see Observer
+	 * @see Observable
 	 */
-	public static <T> IObserver<T> createObserver(Consumer<T> onNext, Consumer<Throwable> onError, Runnable onCompleted) {
+	public static <T> Observer<T> createObserver(Consumer<T> onNext, Consumer<Throwable> onError, Runnable onCompleted) {
 		checkNotNull(onNext, "onNext must be non-null");
 		checkNotNull(onError, "onError must be non-null");
 		checkNotNull(onCompleted, "onCompleted must be non-null");

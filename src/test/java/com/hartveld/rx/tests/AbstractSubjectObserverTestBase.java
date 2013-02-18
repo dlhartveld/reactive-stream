@@ -3,8 +3,8 @@ package com.hartveld.rx.tests;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import com.hartveld.rx.IObservable;
-import com.hartveld.rx.IObserver;
+import com.hartveld.rx.Observable;
+import com.hartveld.rx.Observer;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 import org.junit.After;
@@ -30,9 +30,9 @@ public abstract class AbstractSubjectObserverTestBase {
 	protected ExecutorService syncExecSvc;
 
 	@Mock
-	protected IObserver<String> target;
+	protected Observer<String> target;
 
-	protected abstract void initializeFor(IObservable<String> source, IObserver<String> target);
+	protected abstract void initializeFor(Observable<String> source, Observer<String> target);
 
 	@Before
 	public void setUp() {
@@ -52,7 +52,7 @@ public abstract class AbstractSubjectObserverTestBase {
 
 	@Test
 	public void testThatCompletedAfterErrorIsIgnored() {
-		IObservable<String> source = (Consumer<String> onNext, Consumer<Throwable> onError, Runnable onCompleted) -> {
+		Observable<String> source = (Consumer<String> onNext, Consumer<Throwable> onError, Runnable onCompleted) -> {
 			onNext.accept(hello);
 			onError.accept(expectedException);
 			onCompleted.run();
@@ -68,7 +68,7 @@ public abstract class AbstractSubjectObserverTestBase {
 
 	@Test
 	public void testThatErrorAfterCompletedIsIgnored() {
-		IObservable<String> source = (Consumer<String> onNext, Consumer<Throwable> onError, Runnable onCompleted) -> {
+		Observable<String> source = (Consumer<String> onNext, Consumer<Throwable> onError, Runnable onCompleted) -> {
 			onNext.accept(hello);
 			onCompleted.run();
 			onError.accept(expectedException);
@@ -84,7 +84,7 @@ public abstract class AbstractSubjectObserverTestBase {
 
 	@Test
 	public void testThatObservationsAfterCompletedAreIgnored() {
-		IObservable<String> source = (Consumer<String> onNext, Consumer<Throwable> onError, Runnable onCompleted) -> {
+		Observable<String> source = (Consumer<String> onNext, Consumer<Throwable> onError, Runnable onCompleted) -> {
 			onNext.accept(hello);
 			onCompleted.run();
 			onNext.accept(world);
@@ -100,7 +100,7 @@ public abstract class AbstractSubjectObserverTestBase {
 
 	@Test
 	public void testThatObservationsAfterErrorAreIgnored() {
-		IObservable<String> source = (Consumer<String> onNext, Consumer<Throwable> onError, Runnable onCompleted) -> {
+		Observable<String> source = (Consumer<String> onNext, Consumer<Throwable> onError, Runnable onCompleted) -> {
 			onNext.accept(hello);
 			onError.accept(expectedException);
 			onNext.accept(world);

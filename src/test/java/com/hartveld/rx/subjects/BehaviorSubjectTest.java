@@ -3,7 +3,7 @@ package com.hartveld.rx.subjects;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import com.hartveld.rx.IObserver;
+import com.hartveld.rx.Observer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ public class BehaviorSubjectTest {
 	private BehaviorSubject<String> subject;
 
 	@Mock
-	private IObserver<String> target;
+	private Observer<String> target;
 
 	@Before
 	public void setUp() {

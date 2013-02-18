@@ -5,9 +5,9 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import com.hartveld.rx.IObservable;
-import com.hartveld.rx.IObserver;
-import com.hartveld.rx.Observables;
+import com.hartveld.rx.Observable;
+import com.hartveld.rx.Observer;
+import com.hartveld.rx.ObservableFactory;
 import com.hartveld.rx.tests.AbstractSubjectObserverTestBase;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
@@ -17,7 +17,7 @@ import org.junit.Test;
 public class ObserveOnTest extends AbstractSubjectObserverTestBase {
 
 	@Override
-	protected void initializeFor(IObservable<String> source, IObserver<String> target) {
+	protected void initializeFor(Observable<String> source, Observer<String> target) {
 		source.observeOn(super.syncExecSvc).subscribe(target);
 	}
 
@@ -25,7 +25,7 @@ public class ObserveOnTest extends AbstractSubjectObserverTestBase {
 	public void testThatObserverIsNotifiedOnBackgroundThreadWithObserveOn() throws Exception {
 		long mainThreadId = Thread.currentThread().getId();
 		ExecutorService svc = Executors.newFixedThreadPool(1);
-		IObservable<String> source = Observables.observableOf(hello, world);
+		Observable<String> source = ObservableFactory.observableOf(hello, world);
 		AutoCloseable subscription = source.observeOn(svc).subscribe(
 			text -> {
 				switch(text) {

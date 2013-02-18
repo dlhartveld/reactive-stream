@@ -2,7 +2,7 @@ package com.hartveld.rx;
 
 import java.util.function.Consumer;
 
-public class ForwardingObserver<T> implements IObserver<T> {
+public class ForwardingObserver<T> implements Observer<T> {
 
 	private final Consumer<T> onNext;
 	private final Consumer<Throwable> onError;

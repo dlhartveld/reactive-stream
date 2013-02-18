@@ -1,6 +1,6 @@
 package com.hartveld.rx;
 
-public interface IObserver<T> {
+public interface Observer<T> {
 
 	void onNext(T value);
 

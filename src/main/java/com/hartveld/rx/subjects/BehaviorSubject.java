@@ -1,6 +1,6 @@
 package com.hartveld.rx.subjects;
 
-import com.hartveld.rx.IObserver;
+import com.hartveld.rx.Observer;
 import java.util.function.Consumer;
 
 public class BehaviorSubject<T> extends BasicSubject<T> {
@@ -52,7 +52,7 @@ public class BehaviorSubject<T> extends BasicSubject<T> {
 	}
 
 	@Override
-	public AutoCloseable subscribe(IObserver<T> observer) {
+	public AutoCloseable subscribe(Observer<T> observer) {
 		final AutoCloseable ac = super.subscribe(observer);
 
 		onSubscription(observer::onNext, observer::onError, observer::onCompleted);

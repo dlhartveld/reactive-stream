@@ -1,7 +1,7 @@
 package com.hartveld.rx.subjects;
 
-import com.hartveld.rx.IObservable;
-import com.hartveld.rx.IObserver;
+import com.hartveld.rx.Observable;
+import com.hartveld.rx.Observer;
 import com.hartveld.rx.tests.AbstractSubjectObserverTestBase;
 import org.junit.Before;
 
@@ -18,7 +18,7 @@ public class BasicSubjectTest extends AbstractSubjectObserverTestBase {
 	}
 
 	@Override
-	protected void initializeFor(IObservable<String> source, IObserver<String> target) {
+	protected void initializeFor(Observable<String> source, Observer<String> target) {
 		subject.subscribe(target);
 		source.subscribe(subject);
 	}

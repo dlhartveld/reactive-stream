@@ -5,22 +5,22 @@ import static java.util.function.Predicates.alwaysTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import com.hartveld.rx.IObservable;
-import com.hartveld.rx.IObserver;
-import com.hartveld.rx.Observables;
+import com.hartveld.rx.Observable;
+import com.hartveld.rx.Observer;
+import com.hartveld.rx.ObservableFactory;
 import com.hartveld.rx.tests.AbstractSubjectObserverTestBase;
 import org.junit.Test;
 
 public class FilterTest extends AbstractSubjectObserverTestBase {
 
 	@Override
-	protected void initializeFor(IObservable<String> source, IObserver<String> target) {
+	protected void initializeFor(Observable<String> source, Observer<String> target) {
 		source.filter(alwaysTrue()).subscribe(target);
 	}
 
 	@Test
 	public void testThatAlwaysTrueFilterPassesEverything() {
-		IObservable<String> source = Observables.observableOf(hello, world);
+		Observable<String> source = ObservableFactory.observableOf(hello, world);
 		source.filter(alwaysTrue()).subscribe(target);
 		
 		verify(target).onNext(hello);
@@ -31,7 +31,7 @@ public class FilterTest extends AbstractSubjectObserverTestBase {
 
 	@Test
 	public void testThatAlwaysFalseFilterPassesNothing() {
-		IObservable<String> source = Observables.observableOf(hello, world);
+		Observable<String> source = ObservableFactory.observableOf(hello, world);
 		source.filter(alwaysFalse()).subscribe(target);
 
 		verify(target).onCompleted();
@@ -40,7 +40,7 @@ public class FilterTest extends AbstractSubjectObserverTestBase {
 
 	@Test
 	public void testThatCorrectStringOfTwoIsPassedThrough() {
-		IObservable<String> source = Observables.observableOf(hello, world);
+		Observable<String> source = ObservableFactory.observableOf(hello, world);
 		source.filter(s -> s.equals(hello)).subscribe(target);
 
 		verify(target).onNext(hello);

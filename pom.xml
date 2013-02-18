@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -29,6 +29,8 @@
 		<version.plugin.jar>2.4</version.plugin.jar>
 		<version.plugin.source>2.2.1</version.plugin.source>
 		<version.plugin.javadoc>2.9</version.plugin.javadoc>
+		<version.plugin.site>3.2</version.plugin.site>
+		<version.plugin.project-info-reports>2.6</version.plugin.project-info-reports>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -167,8 +169,28 @@
 				</executions>
 			</plugin>
 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>${version.plugin.site}</version>
+			</plugin>
+
 		</plugins>
 
 	</build>
+
+	<reporting>
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>${version.plugin.project-info-reports}</version>
+			</plugin>
+
+		</plugins>
+
+	</reporting>
 
 </project>

@@ -4,35 +4,35 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import com.hartveld.rx.IObservable;
-import com.hartveld.rx.IObserver;
-import com.hartveld.rx.Observables;
+import com.hartveld.rx.Observable;
+import com.hartveld.rx.ObservableFactory;
+import com.hartveld.rx.Observer;
 import com.hartveld.rx.tests.AbstractSubjectObserverTestBase;
 import org.junit.Test;
 
 public class MapTest extends AbstractSubjectObserverTestBase {
 
 	@Override
-	protected void initializeFor(IObservable<String> source, IObserver<String> target) {
+	protected void initializeFor(Observable<String> source, Observer<String> target) {
 		source.map(s -> s).subscribe(target);
 	}
 
 	@Test
 	public void testThatMapOperatorWorks() throws Exception {
-		IObservable<String> source = Observables.observableOf(hello, world);
+		Observable<String> source = ObservableFactory.observableOf(hello, world);
 
-		AutoCloseable subscription = source.map(x -> x.charAt(0)).subscribe(
+		AutoCloseable subscription = source.map(x -> x.substring(0, 1)).subscribe(
 			e -> {
-				switch(e) {
-					case 'H':
-						gotHello = true;
-						break;
-					case 'w':
-						gotWorld = true;
-						break;
-					default:
-						fail("Got unrecognized character: " + e);
-						break;
+				switch (e.charAt(0)) {
+				case 'H':
+					gotHello = true;
+					break;
+				case 'w':
+					gotWorld = true;
+					break;
+				default:
+					fail("Got unrecognized character: " + e);
+					break;
 				}
 			},
 			e -> fail("Error occurred: " + e.getMessage()),
@@ -48,9 +48,9 @@ public class MapTest extends AbstractSubjectObserverTestBase {
 
 	@Test
 	public void testThatMapOperatorHandlesExceptionCorrectly() throws Exception {
-		IObservable<String> source = Observables.observableOf(hello, world);
+		Observable<String> source = ObservableFactory.observableOf(hello, world);
 
-		AutoCloseable subscription = source.map(x -> x.charAt(5)).subscribe(
+		AutoCloseable subscription = source.map(x -> x.substring(5, 6)).subscribe(
 			e -> fail("Got element: " + e),
 			e -> gotError = true,
 			() -> fail("Got completed")
