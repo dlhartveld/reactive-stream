@@ -41,6 +41,18 @@ public interface Observable<T> extends Stream<T> {
 	 */
 	AutoCloseable subscribe(Consumer<T> onNext, Consumer<Throwable> onError, Runnable onCompleted);
 
+	default AutoCloseable subscribe(Consumer<T> onNext) {
+		return subscribe(onNext, ex -> { }, () -> { });
+	}
+
+	default AutoCloseable subscribe(Consumer<T> onNext, Consumer<Throwable> onError) {
+		return subscribe(onNext, onError, () -> { });
+	}
+
+	default AutoCloseable subscribe(Consumer<T> onNext, Runnable onCompleted) {
+		return subscribe(onNext, ex -> { }, onCompleted);
+	}
+
 	/**
 	 * Subscribe to this {@link Observable}.
 	 *
