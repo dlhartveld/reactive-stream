@@ -41,14 +41,37 @@ public interface Observable<T> extends Stream<T> {
 	 */
 	AutoCloseable subscribe(Consumer<T> onNext, Consumer<Throwable> onError, Runnable onCompleted);
 
+	/**
+	 * Subscribe to this {@link Observable}.
+	 *
+	 * @param onNext The {@link Consumer} that is called when a new value is available. Must be non-<code>null</code>.
+	 *
+	 * @return An {@link AutoCloseable} that can be used to cancel the subscription.
+	 */
 	default AutoCloseable subscribe(Consumer<T> onNext) {
 		return subscribe(onNext, ex -> { }, () -> { });
 	}
 
+	/**
+	 * Subscribe to this {@link Observable}.
+	 *
+	 * @param onNext The {@link Consumer} that is called when a new value is available. Must be non-<code>null</code>.
+	 * @param onError The {@link Consumer} that is called when an error occurs. Must be non-<code>null</code>.
+	 *
+	 * @return An {@link AutoCloseable} that can be used to cancel the subscription.
+	 */
 	default AutoCloseable subscribe(Consumer<T> onNext, Consumer<Throwable> onError) {
 		return subscribe(onNext, onError, () -> { });
 	}
 
+	/**
+	 * Subscribe to this {@link Observable}.
+	 *
+	 * @param onNext The {@link Consumer} that is called when a new value is available. Must be non-<code>null</code>.
+	 * @param onCompleted The {@link Runnable} that is called when the final value has been observed. Must be non-<code>null</code>.
+	 *
+	 * @return An {@link AutoCloseable} that can be used to cancel the subscription.
+	 */
 	default AutoCloseable subscribe(Consumer<T> onNext, Runnable onCompleted) {
 		return subscribe(onNext, ex -> { }, onCompleted);
 	}
