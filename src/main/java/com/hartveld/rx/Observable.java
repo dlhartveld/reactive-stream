@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
@@ -97,25 +96,7 @@ public interface Observable<T> extends Stream<T> {
 	default Observable<T> id() {
 		LOG.trace("id()");
 
-		return (onNext, onError, onCompleted) -> {
-			AtomicBoolean stopped = new AtomicBoolean(false);
-			return subscribe(
-				el -> {
-					if (stopped.get()) return;
-					onNext.accept(el);
-				},
-				ex -> {
-					if (stopped.get()) return;
-					stopped.set(true);
-					onError.accept(ex);
-				},
-				() -> {
-					if (stopped.get()) return;
-					stopped.set(true);
-					onCompleted.run();
-				}
-			);
-		};
+		return new IdOp<>(this);
 	}
 
 	/**
@@ -126,32 +107,12 @@ public interface Observable<T> extends Stream<T> {
 	 * @return A new {@link Observable} that filters observations against the given predicate.
 	 */
 	@Override
-	default Observable<T> filter(Predicate<? super T> predicate) {
-		LOG.trace("filter()");
+	default Observable<T> filter(final Predicate<? super T> predicate) {
+		LOG.trace("filter(): {}", predicate);
 
 		checkNotNull(predicate, "predicate must be non-null");
 
-		return (onNext, onError, onCompleted) -> {
-			AtomicBoolean stopped = new AtomicBoolean(false);
-			return subscribe(
-				el -> {
-					if (stopped.get()) return;
-					if (predicate.test(el)) {
-						onNext.accept(el);
-					}
-				},
-				ex -> {
-					if (stopped.get()) return;
-					stopped.set(true);
-					onError.accept(ex);
-				},
-				() -> {
-					if (stopped.get()) return;
-					stopped.set(true);
-					onCompleted.run();
-				}
-			);
-		};
+		return new FilterOp<>(this, predicate);
 	}
 
 	/**
@@ -162,37 +123,12 @@ public interface Observable<T> extends Stream<T> {
 	 * @return A new {@link Observable} that forwards the result of the application of the mapper to each observation to client subscriptions.
 	 */
 	@Override
-	default <R> Observable<R> map(Function<? super T, ? extends R> mapper) {
-		LOG.trace("map()");
+	default <R> Observable<R> map(final Function<? super T, ? extends R> mapper) {
+		LOG.trace("map(): {}", mapper);
 
 		checkNotNull(mapper, "mapper must be non-null");
 
-		return (onNext, onError, onCompleted) -> {
-			AtomicBoolean stopped = new AtomicBoolean(false);
-			return subscribe(
-				e -> {
-					if (stopped.get()) return;
-					try {
-						R inner = mapper.apply(e);
-						onNext.accept(inner);
-					} catch (RuntimeException ex) {
-						LOG.trace("Caught exception: {}", ex.getMessage(), ex);
-						stopped.set(true);
-						onError.accept(ex);
-					}
-				},
-				e -> {
-					if (stopped.get()) return;
-					stopped.set(true);
-					onError.accept(e);
-				},
-				() -> {
-					if (stopped.get()) return;
-					stopped.set(true);
-					onCompleted.run();
-				}
-			);
-		};
+		return new MapOp<>(this, mapper);
 	}
 
 	@Override
@@ -211,42 +147,20 @@ public interface Observable<T> extends Stream<T> {
 	}
 
 	@Override
-	default <R> Observable<R> flatMap(Function<T, Stream<? extends R>> mapper) {
+	default <R> Observable<R> flatMap(final Function<T, Stream<? extends R>> mapper) {
+		LOG.trace("flatMap(): {}", mapper);
+
         // We can do better than this, by polling cancellationRequested when stream is infinite
         return flatMap((T t, Consumer<R> sink) -> mapper.apply(t).sequential().forEach(sink));
     }
 
 	@Override
-	default <R> Observable<R> flatMap(FlatMapper<? super T, R> mapper) {
-		return (onNext, onError, onCompleted) -> {
-			final AtomicBoolean completed = new AtomicBoolean(false);
-			return subscribe(
-				el -> {
-					if (completed.get()) return;
+	default <R> Observable<R> flatMap(final FlatMapper<? super T, R> mapper) {
+		LOG.trace("flatMap(): {}", mapper);
 
-					try {
-						mapper.explodeInto(el, elem -> onNext.accept(elem));
-					} catch (Throwable t) {
-						completed.set(true);
-						onError.accept(t);
-					}
-				},
-				ex -> {
-					if (completed.get()) return;
+		checkNotNull(mapper, "mapper");
 
-					completed.set(true);
-
-					onError.accept(ex);
-				},
-				() -> {
-					if (completed.get()) return;
-
-					completed.set(true);
-
-					onCompleted.run();
-				}
-			);
-		};
+		return new FlatMapOp<>(this, mapper);
 	}
 
 	@Override
@@ -388,42 +302,12 @@ public interface Observable<T> extends Stream<T> {
 	 *
 	 * @return A new {@link Observable} that executes observations for subscribers through the given executor.
 	 */
-	default Observable<T> observeOn(Executor executor) {
+	default Observable<T> observeOn(final Executor executor) {
 		LOG.trace("observeOn({})", executor);
 
 		checkNotNull(executor, "executor must be non-null");
 
-		return (onNext, onError, onCompleted) -> {
-			AtomicBoolean stopped = new AtomicBoolean(false);
-			return subscribe(
-				e -> {
-					if(stopped.get()) return;
-					LOG.trace("Executing onNext asynchronously for: {}", e);
-					executor.execute(() -> {
-						LOG.trace("onNext({}) (asynchronously called)", e);
-						onNext.accept(e);
-					});
-				},
-				e -> {
-					if(stopped.get()) return;
-					LOG.trace("Executing onError asynchronously for: {}", e);
-					executor.execute(() -> {
-						LOG.trace("onNext({}) (asynchronously called)", e);
-						stopped.set(true);
-						onError.accept(e);
-					});
-				},
-				() -> {
-					if(stopped.get()) return;
-					LOG.trace("Executing onCompleted asynchronously...");
-					executor.execute(() -> {
-						LOG.trace("onCompleted() (asynchronously called)");
-						stopped.set(true);
-						onCompleted.run();
-					});
-				}
-			);
-		};
+		return new ObserveOnOp<>(this, executor);
 	}
 
 	/**
@@ -433,49 +317,12 @@ public interface Observable<T> extends Stream<T> {
 	 *
 	 * @return A new {@link Observable} that executes subscription and closing of subscription through the given executor.
 	 */
-	default Observable<T> subscribeOn(Executor executor) {
+	default Observable<T> subscribeOn(final Executor executor) {
 		LOG.trace("subscribeOn({})", executor);
 
 		checkNotNull(executor, "executor must be non-null");
 
-		return (onNext, onError, onCompleted) -> {
-			AtomicBoolean stopped = new AtomicBoolean(false);
-			ForwardingAutoCloseable fac = new ForwardingAutoCloseable();
-
-			executor.execute(() -> {
-					LOG.trace("Executing asynchronous subscription");
-					fac.set(subscribe(
-						e -> {
-							if(stopped.get()) return;
-							onNext.accept(e);
-						},
-						e -> {
-							if(stopped.get()) return;
-							onError.accept(e);
-							stopped.set(true);
-						},
-						() -> {
-							if(stopped.get()) return;
-							onCompleted.run();
-							stopped.set(true);
-						}
-					));
-				}
-			);
-
-			return () -> {
-				LOG.trace("Executing asynchronous close...");
-				executor.execute(() -> {
-					LOG.trace("Executing close...");
-					try {
-						fac.close();
-					} catch (Exception e) {
-						LOG.trace("Caught exception on close: {}", e.getMessage(), e);
-						// TODO: Create test case for this scenario, then implement a proper handling.
-					}
-				});
-			};
-		};
+		return new SubscribeOnOp<>(this, executor);
 	}
 
 	@Override
