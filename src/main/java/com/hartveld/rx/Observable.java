@@ -195,7 +195,35 @@ public interface Observable<T> extends Stream<T> {
 
 	@Override
 	default <R> Observable<R> flatMap(FlatMapper<? super T, R> mapper) {
-		throw new NotImplementedException();
+		return (onNext, onError, onCompleted) -> {
+			final AtomicBoolean completed = new AtomicBoolean(false);
+			return subscribe(
+				el -> {
+					if (completed.get()) return;
+
+					try {
+						mapper.explodeInto(el, elem -> onNext.accept(elem));
+					} catch (Throwable t) {
+						completed.set(true);
+						onError.accept(t);
+					}
+				},
+				ex -> {
+					if (completed.get()) return;
+
+					completed.set(true);
+
+					onError.accept(ex);
+				},
+				() -> {
+					if (completed.get()) return;
+
+					completed.set(true);
+
+					onCompleted.run();
+				}
+			);
+		};
 	}
 
 	@Override
