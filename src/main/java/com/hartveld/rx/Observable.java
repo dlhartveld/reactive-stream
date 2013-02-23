@@ -199,7 +199,7 @@ public interface Observable<T> extends Stream<T> {
 	}
 
 	@Override
-	default void forEachUntil(Consumer<? super T> consumer, BooleanSupplier until) {
+	default void forEachUntilCancelled(Consumer<? super T> consumer, BooleanSupplier until) {
 		throw new NotImplementedException();
 	}
 

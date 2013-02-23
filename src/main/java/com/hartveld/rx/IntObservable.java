@@ -155,7 +155,7 @@ public interface IntObservable extends IntStream {
 	}
 
     @Override
-	default void forEachUntil(IntConsumer consumer, BooleanSupplier until) {
+	default void forEachUntilCancelled(IntConsumer consumer, BooleanSupplier until) {
 		throw new NotImplementedException();
 	}
 

@@ -150,7 +150,7 @@ public interface LongObservable extends LongStream {
 	}
 
 	@Override
-	default void forEachUntil(LongConsumer consumer, BooleanSupplier until) {
+	default void forEachUntilCancelled(LongConsumer consumer, BooleanSupplier until) {
 		throw new NotImplementedException();
 	}
 

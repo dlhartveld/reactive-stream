@@ -19,7 +19,7 @@ class FlatMapOp<T, R> extends OperatorBase<T, R> {
 
 	@Override
 	protected void onNext(T element, Consumer<R> onNext) {
-		mapper.explodeInto(element, onNext);
+		mapper.flattenInto(element, onNext);
 	}
 
 }

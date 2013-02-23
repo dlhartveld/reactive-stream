@@ -150,7 +150,7 @@ public interface DoubleObservable extends DoubleStream {
 	}
 
 	@Override
-	default void forEachUntil(DoubleConsumer consumer, BooleanSupplier until) {
+	default void forEachUntilCancelled(DoubleConsumer consumer, BooleanSupplier until) {
 		throw new NotImplementedException();
 	}
 
