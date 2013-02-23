@@ -108,7 +108,7 @@ public interface Observable<T> extends Stream<T> {
 	 */
 	@Override
 	default Observable<T> filter(final Predicate<? super T> predicate) {
-		LOG.trace("filter(): {}", predicate);
+		LOG.trace("filter()");
 
 		checkNotNull(predicate, "predicate must be non-null");
 
@@ -124,7 +124,7 @@ public interface Observable<T> extends Stream<T> {
 	 */
 	@Override
 	default <R> Observable<R> map(final Function<? super T, ? extends R> mapper) {
-		LOG.trace("map(): {}", mapper);
+		LOG.trace("map()");
 
 		checkNotNull(mapper, "mapper must be non-null");
 
@@ -148,7 +148,7 @@ public interface Observable<T> extends Stream<T> {
 
 	@Override
 	default <R> Observable<R> flatMap(final Function<T, Stream<? extends R>> mapper) {
-		LOG.trace("flatMap(): {}", mapper);
+		LOG.trace("flatMap()");
 
         // We can do better than this, by polling cancellationRequested when stream is infinite
         return flatMap((T t, Consumer<R> sink) -> mapper.apply(t).sequential().forEach(sink));
@@ -156,7 +156,7 @@ public interface Observable<T> extends Stream<T> {
 
 	@Override
 	default <R> Observable<R> flatMap(final FlatMapper<? super T, R> mapper) {
-		LOG.trace("flatMap(): {}", mapper);
+		LOG.trace("flatMap()");
 
 		checkNotNull(mapper, "mapper");
 
