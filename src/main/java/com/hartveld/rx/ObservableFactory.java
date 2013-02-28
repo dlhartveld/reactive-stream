@@ -1,5 +1,9 @@
 package com.hartveld.rx;
 
+import com.hartveld.rx.concurrency.Schedulers;
+import com.hartveld.rx.subjects.TaskSubject;
+import java.util.concurrent.Callable;
+
 public class ObservableFactory {
 
 	@SafeVarargs
@@ -49,6 +53,10 @@ public class ObservableFactory {
 
 			return () -> { };
 		};
+	}
+
+	public static <T> Observable<T> observableOfTask(final Callable<T> task) {
+		return new TaskSubject<>(Schedulers.DEFAULT, task);
 	}
 
 	private ObservableFactory() {

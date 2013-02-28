@@ -6,11 +6,12 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import com.hartveld.rx.Observable;
-import com.hartveld.rx.Observer;
 import com.hartveld.rx.ObservableFactory;
+import com.hartveld.rx.Observer;
+import com.hartveld.rx.concurrency.Schedulers;
 import com.hartveld.rx.tests.AbstractSubjectObserverTestBase;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class ObserveOnTest extends AbstractSubjectObserverTestBase {
 
 	@Override
 	protected void initializeFor(Observable<String> source, Observer<String> target) {
-		source.observeOn(super.syncExecSvc).subscribe(target);
+		source.observeOn(Schedulers.IMMEDIATE).subscribe(target);
 	}
 
 	@Test

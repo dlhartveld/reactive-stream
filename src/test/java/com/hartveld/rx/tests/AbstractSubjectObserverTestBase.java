@@ -5,9 +5,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import com.hartveld.rx.Observable;
 import com.hartveld.rx.Observer;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +26,8 @@ public abstract class AbstractSubjectObserverTestBase {
 	protected boolean gotError;
 	protected boolean completed;
 
-	protected ExecutorService syncExecSvc;
+	@Mock
+	protected Executor scheduler;
 
 	@Mock
 	protected Observer<String> target;
@@ -41,13 +41,24 @@ public abstract class AbstractSubjectObserverTestBase {
 
 		gotError = false;
 		completed = false;
-
-		syncExecSvc = new SynchronousExecutorService();
 	}
 
-	@After
-	public void tearDown() {
-		syncExecSvc.shutdown();
+	@Test
+	public void testThatBasicFunctionalityWorks() {
+		Observable<String> source = (onNext, onError, onCompleted) -> {
+			onNext.accept(hello);
+			onNext.accept(world);
+			onCompleted.run();
+
+			return () -> { };
+		};
+
+		initializeFor(source, target);
+
+		verify(target).onNext(hello);
+		verify(target).onNext(world);
+		verify(target).onCompleted();
+		verifyNoMoreInteractions(target);
 	}
 
 	@Test
@@ -56,6 +67,7 @@ public abstract class AbstractSubjectObserverTestBase {
 			onNext.accept(hello);
 			onError.accept(expectedException);
 			onCompleted.run();
+
 			return () -> { };
 		};
 
@@ -72,6 +84,7 @@ public abstract class AbstractSubjectObserverTestBase {
 			onNext.accept(hello);
 			onCompleted.run();
 			onError.accept(expectedException);
+
 			return () -> { };
 		};
 
@@ -88,6 +101,7 @@ public abstract class AbstractSubjectObserverTestBase {
 			onNext.accept(hello);
 			onCompleted.run();
 			onNext.accept(world);
+
 			return () -> { };
 		};
 
@@ -104,6 +118,7 @@ public abstract class AbstractSubjectObserverTestBase {
 			onNext.accept(hello);
 			onError.accept(expectedException);
 			onNext.accept(world);
+
 			return () -> { };
 		};
 

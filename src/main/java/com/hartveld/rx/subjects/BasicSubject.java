@@ -9,51 +9,61 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BasicSubject<T> implements Subject<T> {
+public class BasicSubject<T, Source> implements Subject<T> {
 
 	@SuppressWarnings("FieldNameHidesFieldInSuperclass")
 	private static final Logger LOG = LoggerFactory.getLogger(BasicSubject.class);
+
 	// TODO: Change to a concurrent list.
-	private Map<AutoCloseable, Observer<T>> observers = new ConcurrentHashMap<>();
+	private final Map<AutoCloseable, Observer<T>> observers = new ConcurrentHashMap<>();
+
 	private boolean stopped = false;
 
 	@Override
-	public AutoCloseable subscribe(Observer<T> observer) {
+	public AutoCloseable subscribe(final Observer<T> observer) {
 		LOG.trace("Subscribing new observer: {}", observer);
 
-		ForwardingAutoCloseable fac = new ForwardingAutoCloseable();
+		final ForwardingAutoCloseable<Source> fac = new ForwardingAutoCloseable<>();
 		fac.set(() -> {
 			if (observers.containsKey(fac)) {
 				observers.remove(fac);
+
+				final Source source = fac.getSource();
+				if (source != null) {
+					onClose(source);
+				}
 			}
 		});
 
 		observers.put(fac, observer);
 
+		final Source source = onSubscribe(observer);
+		if (source != null) {
+			fac.setSource(source);
+		}
+
 		return fac;
 	}
 
 	@Override
-	public final AutoCloseable subscribe(Consumer<T> onNext, Consumer<Throwable> onError, Runnable onCompleted) {
+	public final AutoCloseable subscribe(final Consumer<T> onNext, final Consumer<Throwable> onError, final Runnable onCompleted) {
 		LOG.trace("Subscribing new forwarding observer ...");
 		return this.subscribe(ObserverFactory.createObserver(onNext, onError, onCompleted));
 	}
 
 	@Override
-	public void onNext(T value) {
+	public void onNext(final T value) {
 		LOG.trace("onNext(): {}", value);
 
 		if (stopped) {
 			return;
 		}
 
-		for (Observer<T> observer : observers.values()) {
-			observer.onNext(value);
-		}
+		observers.values().stream().forEach(observer -> observer.onNext(value));
 	}
 
 	@Override
-	public void onError(Throwable cause) {
+	public void onError(final Throwable cause) {
 		LOG.trace("onError(): {}", cause.getMessage(), cause);
 
 		if (stopped) {
@@ -62,9 +72,7 @@ public class BasicSubject<T> implements Subject<T> {
 
 		stopped = true;
 
-		for (Observer<T> observer : observers.values()) {
-			observer.onError(cause);
-		}
+		observers.values().stream().forEach(observer -> observer.onError(cause));
 	}
 
 	@Override
@@ -77,9 +85,11 @@ public class BasicSubject<T> implements Subject<T> {
 
 		stopped = true;
 
-		for (Observer<T> observer : observers.values()) {
-			observer.onCompleted();
-		}
+		observers.values().stream().forEach(observer -> observer.onCompleted());
 	}
+
+	protected Source onSubscribe(final Observer<T> observer) { return null; };
+
+	protected void onClose(final Source source) { }
 
 }

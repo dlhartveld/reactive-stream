@@ -3,14 +3,24 @@ package com.hartveld.rx;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-public class ForwardingAutoCloseable implements AutoCloseable {
 
+public class ForwardingAutoCloseable<Source> implements AutoCloseable {
+
+	private Source source = null;
 	private AutoCloseable future = null;
 
-	public void set(AutoCloseable future) {
+	public void set(final AutoCloseable future) {
 		checkState(this.future == null, "The set method is already called.");
 
 		this.future = checkNotNull(future, "future must be non-null");
+	}
+
+	public Source getSource() {
+		return this.source;
+	}
+
+	public void setSource(final Source source) {
+		this.source = source;
 	}
 
 	@Override
