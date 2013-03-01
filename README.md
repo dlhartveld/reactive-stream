@@ -1,4 +1,6 @@
-rx-core -- Reactive extensions for Java
-=======================================
+reactive-stream -- Reactive programming with JDK 8
+==================================================
 
-By David Hartveld -- david@hartveld.net
+reactive-stream is a reactive programming library for Java 8 based on the Stream API.
+
+By David Hartveld -- david@hartveld.com
