@@ -1,6 +1,7 @@
 package com.hartveld.stream.reactive;
 
 import java.util.OptionalDouble;
+import java.util.PrimitiveIterator;
 import java.util.Spliterator;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -20,6 +21,11 @@ public interface DoubleObservable extends DoubleStream {
 
 	default AutoCloseable subscribe(DoubleObserver observer) {
 		return subscribe(observer::onNext, observer::onError, observer::onCompleted);
+	}
+
+	@Override
+	default PrimitiveIterator.OfDouble iterator() {
+		throw new NotImplementedException();
 	}
 
 	@Override

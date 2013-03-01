@@ -1,6 +1,7 @@
 package com.hartveld.stream.reactive;
 
 import java.util.OptionalInt;
+import java.util.PrimitiveIterator;
 import java.util.Spliterator;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -161,6 +162,11 @@ public interface IntObservable extends IntStream {
 
     @Override
 	default int[] toArray() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default PrimitiveIterator.OfInt iterator() {
 		throw new NotImplementedException();
 	}
 

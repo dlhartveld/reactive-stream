@@ -1,6 +1,7 @@
 package com.hartveld.stream.reactive;
 
 import java.util.OptionalLong;
+import java.util.PrimitiveIterator;
 import java.util.Spliterator;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -156,6 +157,11 @@ public interface LongObservable extends LongStream {
 
 	@Override
 	default long[] toArray() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default PrimitiveIterator.OfLong iterator() {
 		throw new NotImplementedException();
 	}
 

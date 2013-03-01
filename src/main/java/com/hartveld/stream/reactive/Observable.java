@@ -3,6 +3,7 @@ package com.hartveld.stream.reactive;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.concurrent.Executor;
@@ -323,6 +324,11 @@ public interface Observable<T> extends Stream<T> {
 		checkNotNull(executor, "executor must be non-null");
 
 		return new SubscribeOnOp<>(this, executor);
+	}
+
+	@Override
+	default Iterator<T> iterator() {
+		throw new NotImplementedException();
 	}
 
 	@Override
