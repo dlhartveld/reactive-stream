@@ -3,10 +3,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.hartveld.rx</groupId>
-	<artifactId>rx-core</artifactId>
+	<groupId>com.hartveld.stream.reactive</groupId>
+	<artifactId>reactive-stream</artifactId>
 	<version>0.1-SNAPSHOT</version>
-	<name>Hartveld.COM - RX - Core</name>
+	<name>Hartveld.COM - Reactive Stream</name>
 
 	<prerequisites>
 		<maven>3.0.4</maven>
