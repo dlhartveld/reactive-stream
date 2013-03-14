@@ -1,5 +1,6 @@
 package com.hartveld.stream.reactive;
 
+import java.util.OptionalDouble;
 import java.util.OptionalLong;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;
@@ -160,6 +161,33 @@ public interface LongObservable extends LongStream {
 		throw new NotImplementedException();
 	}
 
+
+	@Override
+	default long count() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	default OptionalDouble average() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default OptionalLong min() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default OptionalLong max() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default long sum() {
+		throw new NotImplementedException();
+	}
+
+
 	@Override
 	default PrimitiveIterator.OfLong iterator() {
 		throw new NotImplementedException();
@@ -172,7 +200,7 @@ public interface LongObservable extends LongStream {
 
 	@Override
 	default boolean isParallel() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

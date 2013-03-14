@@ -294,6 +294,26 @@ public interface Observable<T> extends Stream<T> {
 		throw new NotImplementedException();
 	}
 
+	@Override
+	default long count() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	default Optional<T> min(Comparator<? super T> comparator) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	default Optional<T> max(Comparator<? super T> comparator) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	default Object[] toArray() {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
 	 * Execute observations with the given executor.
 	 * <p>
@@ -338,7 +358,7 @@ public interface Observable<T> extends Stream<T> {
 
 	@Override
 	default boolean isParallel() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

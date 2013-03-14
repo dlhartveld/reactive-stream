@@ -165,9 +165,34 @@ public interface DoubleObservable extends DoubleStream {
 		throw new NotImplementedException();
 	}
 
+
+	@Override
+	default long count() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default OptionalDouble average() {
+		throw new NotImplementedException();
+	}
+	@Override
+	default OptionalDouble min() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default OptionalDouble max() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default double sum() {
+		throw new NotImplementedException();
+	}
+
 	@Override
 	default boolean isParallel() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

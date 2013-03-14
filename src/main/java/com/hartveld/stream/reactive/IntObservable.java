@@ -1,5 +1,6 @@
 package com.hartveld.stream.reactive;
 
+import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;
@@ -166,6 +167,31 @@ public interface IntObservable extends IntStream {
 	}
 
 	@Override
+	default long count() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	default OptionalDouble average() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default OptionalInt min() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default OptionalInt max() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default int sum() {
+		throw new NotImplementedException();
+	}
+
+	@Override
 	default PrimitiveIterator.OfInt iterator() {
 		throw new NotImplementedException();
 	}
@@ -177,7 +203,7 @@ public interface IntObservable extends IntStream {
 
 	@Override
 	default boolean isParallel() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
