@@ -3,14 +3,19 @@ package com.hartveld.stream.reactive;
 import java.util.OptionalDouble;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;
+import java.util.function.BiConsumer;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.DoubleBinaryOperator;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleFunction;
 import java.util.function.DoublePredicate;
+import java.util.function.DoubleToIntFunction;
+import java.util.function.DoubleToLongFunction;
 import java.util.function.DoubleUnaryOperator;
-import java.util.stream.Collector;
+import java.util.function.ObjDoubleConsumer;
+import java.util.function.Supplier;
+import java.util.stream.DoubleStatistics;
 import java.util.stream.DoubleStream;
 import java.util.stream.FlatMapper;
 import org.apache.commons.lang.NotImplementedException;
@@ -45,6 +50,16 @@ public interface DoubleObservable extends DoubleStream {
 
 	@Override
 	default <U> Observable<U> map(DoubleFunction<U> mapper) {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default IntObservable map(DoubleToIntFunction mapper) {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default LongObservable map(DoubleToLongFunction mapper) {
 		throw new NotImplementedException();
 	}
 
@@ -116,16 +131,6 @@ public interface DoubleObservable extends DoubleStream {
 	}
 
 	@Override
-	default <R> R collect(Collector.OfDouble<R> collector) {
-		throw new NotImplementedException();
-	}
-
-	@Override
-	default <R> R collectUnordered(Collector.OfDouble<R> collector) {
-		throw new NotImplementedException();
-	}
-
-	@Override
 	default boolean anyMatch(DoublePredicate predicate) {
 		throw new NotImplementedException();
 	}
@@ -186,6 +191,11 @@ public interface DoubleObservable extends DoubleStream {
 	}
 
 	@Override
+	default DoubleStatistics statistics() {
+		throw new NotImplementedException();
+	}
+
+	@Override
 	default double sum() {
 		throw new NotImplementedException();
 	}
@@ -197,6 +207,11 @@ public interface DoubleObservable extends DoubleStream {
 
 	@Override
 	default int getStreamFlags() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default <R> R collect(Supplier<R> resultFactory, ObjDoubleConsumer<R> accumulator, BiConsumer<R, R> combiner) {
 		throw new NotImplementedException();
 	}
 

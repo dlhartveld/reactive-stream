@@ -4,15 +4,20 @@ import java.util.OptionalDouble;
 import java.util.OptionalLong;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;
+import java.util.function.BiConsumer;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.LongBinaryOperator;
 import java.util.function.LongConsumer;
 import java.util.function.LongFunction;
 import java.util.function.LongPredicate;
+import java.util.function.LongToDoubleFunction;
+import java.util.function.LongToIntFunction;
 import java.util.function.LongUnaryOperator;
-import java.util.stream.Collector;
+import java.util.function.ObjLongConsumer;
+import java.util.function.Supplier;
 import java.util.stream.FlatMapper;
+import java.util.stream.LongStatistics;
 import java.util.stream.LongStream;
 import org.apache.commons.lang.NotImplementedException;
 
@@ -41,6 +46,16 @@ public interface LongObservable extends LongStream {
 
 	@Override
 	default <U> Observable<U> map(LongFunction<U> mapper) {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default IntObservable map(LongToIntFunction mapper) {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default DoubleObservable map(LongToDoubleFunction mapper) {
 		throw new NotImplementedException();
 	}
 
@@ -112,16 +127,6 @@ public interface LongObservable extends LongStream {
 	}
 
 	@Override
-	default <R> R collect(Collector.OfLong<R> collector) {
-		throw new NotImplementedException();
-	}
-
-	@Override
-	default <R> R collectUnordered(Collector.OfLong<R> collector) {
-		throw new NotImplementedException();
-	}
-
-	@Override
 	default boolean anyMatch(LongPredicate predicate) {
 		throw new NotImplementedException();
 	}
@@ -183,6 +188,11 @@ public interface LongObservable extends LongStream {
 	}
 
 	@Override
+	default LongStatistics statistics() {
+		throw new NotImplementedException();
+	}
+
+	@Override
 	default long sum() {
 		throw new NotImplementedException();
 	}
@@ -205,6 +215,11 @@ public interface LongObservable extends LongStream {
 
 	@Override
 	default int getStreamFlags() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default <R> R collect(Supplier<R> resultFactory, ObjLongConsumer<R> accumulator, BiConsumer<R, R> combiner) {
 		throw new NotImplementedException();
 	}
 

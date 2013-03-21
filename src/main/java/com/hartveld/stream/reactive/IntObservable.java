@@ -4,16 +4,23 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;
+import java.util.function.BiConsumer;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.IntBinaryOperator;
 import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
+import java.util.function.IntToDoubleFunction;
+import java.util.function.IntToLongFunction;
 import java.util.function.IntUnaryOperator;
-import java.util.stream.Collector;
+import java.util.function.ObjIntConsumer;
+import java.util.function.Supplier;
+import java.util.stream.DoubleStream;
 import java.util.stream.FlatMapper;
+import java.util.stream.IntStatistics;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import org.apache.commons.lang.NotImplementedException;
 
 public interface IntObservable extends IntStream {
@@ -46,6 +53,16 @@ public interface IntObservable extends IntStream {
 
 	@Override
 	default <U> Observable<U> map(IntFunction<U> mapper) {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default DoubleStream map(IntToDoubleFunction mapper) {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default LongStream map(IntToLongFunction mapper) {
 		throw new NotImplementedException();
 	}
 
@@ -116,16 +133,6 @@ public interface IntObservable extends IntStream {
 		throw new NotImplementedException();
 	}
 
-	@Override
-	default <R> R collect(Collector.OfInt<R> collector) {
-		throw new NotImplementedException();
-	}
-
-	@Override
-	default <R> R collectUnordered(Collector.OfInt<R> collector) {
-		throw new NotImplementedException();
-	}
-
     @Override
 	default boolean anyMatch(IntPredicate predicate) {
 		throw new NotImplementedException();
@@ -187,6 +194,11 @@ public interface IntObservable extends IntStream {
 	}
 
 	@Override
+	default IntStatistics statistics() {
+		throw new NotImplementedException();
+	}
+
+	@Override
 	default int sum() {
 		throw new NotImplementedException();
 	}
@@ -208,6 +220,11 @@ public interface IntObservable extends IntStream {
 
 	@Override
 	default int getStreamFlags() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default <R> R collect(Supplier<R> resultFactory, ObjIntConsumer<R> accumulator, BiConsumer<R, R> combiner) {
 		throw new NotImplementedException();
 	}
 
