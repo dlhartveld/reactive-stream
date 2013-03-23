@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
@@ -364,6 +365,18 @@ public interface Observable<T> extends Stream<T> {
 	@Override
 	default int getStreamFlags() {
 		throw new NotImplementedException();
+	}
+
+	/**
+	 * Throttle the incoming elements during the given time frame.
+	 *
+	 * @param time The number of time units to wait between forwarding of elements.
+	 * @param unit The size of the time unit.
+	 *
+	 * @return A throttled {@link Observable}.
+	 */
+	default Observable<T> throttle(final int time, final TimeUnit unit) {
+		return new ThrottleOp<>(this, time, unit);
 	}
 
 }
