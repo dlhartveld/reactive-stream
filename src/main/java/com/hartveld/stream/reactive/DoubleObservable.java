@@ -22,7 +22,7 @@ import org.apache.commons.lang.NotImplementedException;
 
 public interface DoubleObservable extends DoubleStream {
 
-	AutoCloseable subscribe(DoubleConsumer onNext, Consumer<Throwable> onError, Runnable onCompleted);
+	AutoCloseable subscribe(DoubleConsumer onNext, Consumer<Exception> onError, Runnable onCompleted);
 
 	default AutoCloseable subscribe(DoubleObserver observer) {
 		return subscribe(observer::onNext, observer::onError, observer::onCompleted);

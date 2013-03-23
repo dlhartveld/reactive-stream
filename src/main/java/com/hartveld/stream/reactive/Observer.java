@@ -4,7 +4,7 @@ public interface Observer<T> {
 
 	void onNext(T value);
 
-	void onError(Throwable e);
+	void onError(Exception e);
 
 	void onCompleted();
 

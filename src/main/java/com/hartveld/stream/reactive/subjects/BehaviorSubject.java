@@ -5,7 +5,7 @@ import com.hartveld.stream.reactive.Observer;
 public class BehaviorSubject<T, Source> extends BasicSubject<T, Source> {
 
 	private T current;
-	private Throwable error;
+	private Exception error;
 	private boolean completed;
 
 	public BehaviorSubject(T value) {
@@ -26,7 +26,7 @@ public class BehaviorSubject<T, Source> extends BasicSubject<T, Source> {
 	}
 
 	@Override
-	public void onError(Throwable e) {
+	public void onError(Exception e) {
 		if (completed) {
 			return;
 		}

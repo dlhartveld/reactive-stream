@@ -6,7 +6,7 @@ import java.util.function.LongConsumer;
 public class TestLongObservable implements LongObservable {
 
 	@Override
-	public AutoCloseable subscribe(LongConsumer onNext, Consumer<Throwable> onError, Runnable onCompleted) {
+	public AutoCloseable subscribe(LongConsumer onNext, Consumer<Exception> onError, Runnable onCompleted) {
 		return null;
 	}
 

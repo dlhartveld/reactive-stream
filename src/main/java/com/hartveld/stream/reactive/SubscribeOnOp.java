@@ -17,7 +17,7 @@ class SubscribeOnOp<T> extends SchedulingOperatorBase<T, T> {
 	}
 
 	@Override
-	public AutoCloseable subscribe(final Consumer<T> onNext, final Consumer<Throwable> onError, final Runnable onCompleted) {
+	public AutoCloseable subscribe(final Consumer<T> onNext, final Consumer<Exception> onError, final Runnable onCompleted) {
 		checkNotNull(onNext, "onNext");
 		checkNotNull(onError, "onError");
 		checkNotNull(onCompleted, "onCompleted");

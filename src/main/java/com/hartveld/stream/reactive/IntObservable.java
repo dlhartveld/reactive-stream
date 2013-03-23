@@ -25,7 +25,7 @@ import org.apache.commons.lang.NotImplementedException;
 
 public interface IntObservable extends IntStream {
 
-	AutoCloseable subscribe(IntConsumer onNext, Consumer<Throwable> onError, Runnable onCompleted);
+	AutoCloseable subscribe(IntConsumer onNext, Consumer<Exception> onError, Runnable onCompleted);
 
 	default AutoCloseable subscribe(final IntObserver observer) {
 		return subscribe(observer::onNext, observer::onError, observer::onCompleted);

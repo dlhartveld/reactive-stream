@@ -19,7 +19,7 @@ abstract class OperatorBase<T, R> implements Observable<R> {
 	}
 
 	@Override
-	public AutoCloseable subscribe(final Consumer<R> onNext, final Consumer<Throwable> onError, final Runnable onCompleted) {
+	public AutoCloseable subscribe(final Consumer<R> onNext, final Consumer<Exception> onError, final Runnable onCompleted) {
 		return source.subscribe(
 			el -> {
 				if (stopped.get()) {
@@ -28,7 +28,7 @@ abstract class OperatorBase<T, R> implements Observable<R> {
 
 				try {
 					onNext(el, onNext);
-				} catch (Throwable t) {
+				} catch (Exception t) {
 					stopped.set(true);
 					unsubscribe();
 					onError(t, onError);
@@ -62,7 +62,7 @@ abstract class OperatorBase<T, R> implements Observable<R> {
 
 	protected abstract void onNext(final T element, final Consumer<R> onNext);
 
-	protected void onError(final Throwable exception, final Consumer<Throwable> onError) {
+	protected void onError(final Exception exception, final Consumer<Exception> onError) {
 		onError.accept(exception);
 	}
 

@@ -33,17 +33,16 @@ public class ThrottleTest extends AbstractSubjectObserverTestBase {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void testThatThrottleSchedulesOnDefaultScheduler() {
-		for (int i = 0; i < 10000; i++) {
-			target = mock(Observer.class);
-			final Observable<String> source = ObservableFactory.observableOf(hello, world);
+	public void testThatThrottleSkipsSecondElement() {
+		target = mock(Observer.class);
 
-			source.throttle(1, TimeUnit.SECONDS).subscribe(target);
+		final Observable<String> source = ObservableFactory.observableOf(hello, world);
 
-			verify(target).onNext(hello);
-			verify(target).onCompleted();
-			verifyNoMoreInteractions(target);
-		}
+		source.throttle(1, TimeUnit.SECONDS).subscribe(target);
+
+		verify(target).onNext(hello);
+		verify(target).onCompleted();
+		verifyNoMoreInteractions(target);
 	}
 
 }

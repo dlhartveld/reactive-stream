@@ -46,7 +46,7 @@ public class BasicSubject<T, Source> implements Subject<T> {
 	}
 
 	@Override
-	public final AutoCloseable subscribe(final Consumer<T> onNext, final Consumer<Throwable> onError, final Runnable onCompleted) {
+	public final AutoCloseable subscribe(final Consumer<T> onNext, final Consumer<Exception> onError, final Runnable onCompleted) {
 		LOG.trace("Subscribing new forwarding observer ...");
 		return this.subscribe(ObserverFactory.createObserver(onNext, onError, onCompleted));
 	}
@@ -63,8 +63,8 @@ public class BasicSubject<T, Source> implements Subject<T> {
 	}
 
 	@Override
-	public void onError(final Throwable cause) {
-		LOG.trace("onError(): {}", cause.getMessage(), cause);
+	public void onError(final Exception exception) {
+		LOG.trace("onError(): {}", exception.getMessage(), exception);
 
 		if (stopped) {
 			return;
@@ -72,7 +72,7 @@ public class BasicSubject<T, Source> implements Subject<T> {
 
 		stopped = true;
 
-		observers.values().stream().forEach(observer -> observer.onError(cause));
+		observers.values().stream().forEach(observer -> observer.onError(exception));
 	}
 
 	@Override

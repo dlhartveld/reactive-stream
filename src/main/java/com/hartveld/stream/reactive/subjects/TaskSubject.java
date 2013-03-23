@@ -32,8 +32,9 @@ public class TaskSubject<T> extends BasicSubject<T, Callable<T>> implements Subj
 				final T result = task.call();
 				onNext(result);
 				onCompleted();
-			} catch (Throwable t) {
-				onError(t);
+			} catch (Exception ex) {
+				LOG.warn("Caught exception: {}", ex.getMessage(), ex);
+				onError(ex);
 			}
 		});
 

@@ -23,7 +23,7 @@ import org.apache.commons.lang.NotImplementedException;
 
 public interface LongObservable extends LongStream {
 
-	AutoCloseable subscribe(LongConsumer onNext, Consumer<Throwable> onError, Runnable onCompleted);
+	AutoCloseable subscribe(LongConsumer onNext, Consumer<Exception> onError, Runnable onCompleted);
 
 	default AutoCloseable subscribe(final LongObserver observer) {
 		return subscribe(observer::onNext, observer::onError, observer::onCompleted);

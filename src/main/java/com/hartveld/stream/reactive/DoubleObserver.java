@@ -4,7 +4,7 @@ public interface DoubleObserver {
 
 	void onNext(double value);
 
-	void onError(Throwable e);
+	void onError(Exception e);
 
 	void onCompleted();
 

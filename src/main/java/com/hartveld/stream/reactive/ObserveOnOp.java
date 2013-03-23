@@ -15,7 +15,7 @@ class ObserveOnOp<T> extends SchedulingOperatorBase<T, T> {
 	}
 
 	@Override
-	protected void onError(final Throwable exception, final Consumer<Throwable> onError) {
+	protected void onError(final Exception exception, final Consumer<Exception> onError) {
 		schedule(() -> onError.accept(exception));
 	}
 

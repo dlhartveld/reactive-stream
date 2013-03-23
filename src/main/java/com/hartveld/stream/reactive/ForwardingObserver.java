@@ -5,10 +5,10 @@ import java.util.function.Consumer;
 public class ForwardingObserver<T> implements Observer<T> {
 
 	private final Consumer<T> onNext;
-	private final Consumer<Throwable> onError;
+	private final Consumer<Exception> onError;
 	private final Runnable onCompleted;
 
-	public ForwardingObserver(Consumer<T> onNext, Consumer<Throwable> onError, Runnable onCompleted) {
+	public ForwardingObserver(Consumer<T> onNext, Consumer<Exception> onError, Runnable onCompleted) {
 		this.onNext = onNext;
 		this.onError = onError;
 		this.onCompleted = onCompleted;
@@ -20,7 +20,7 @@ public class ForwardingObserver<T> implements Observer<T> {
 	}
 
 	@Override
-	public void onError(Throwable cause) {
+	public void onError(Exception cause) {
 		onError.accept(cause);
 	}
 

@@ -5,7 +5,8 @@ import java.util.function.IntConsumer;
 
 public class TestIntObservable implements IntObservable {
 
-	public AutoCloseable subscribe(IntConsumer onNext, Consumer<Throwable> onError, Runnable onCompleted) {
+	@Override
+	public AutoCloseable subscribe(IntConsumer onNext, Consumer<Exception> onError, Runnable onCompleted) {
 		return null;
 	}
 

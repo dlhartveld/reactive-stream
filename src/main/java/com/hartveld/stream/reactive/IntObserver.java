@@ -4,7 +4,7 @@ public interface IntObserver {
 
 	void onNext(int value);
 
-	void onError(Throwable e);
+	void onError(Exception e);
 
 	void onCompleted();
 

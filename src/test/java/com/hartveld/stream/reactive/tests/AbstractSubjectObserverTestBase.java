@@ -63,7 +63,7 @@ public abstract class AbstractSubjectObserverTestBase {
 
 	@Test
 	public void testThatCompletedAfterErrorIsIgnored() {
-		Observable<String> source = (Consumer<String> onNext, Consumer<Throwable> onError, Runnable onCompleted) -> {
+		Observable<String> source = (Consumer<String> onNext, Consumer<Exception> onError, Runnable onCompleted) -> {
 			onNext.accept(hello);
 			onError.accept(expectedException);
 			onCompleted.run();
@@ -80,7 +80,7 @@ public abstract class AbstractSubjectObserverTestBase {
 
 	@Test
 	public void testThatErrorAfterCompletedIsIgnored() {
-		Observable<String> source = (Consumer<String> onNext, Consumer<Throwable> onError, Runnable onCompleted) -> {
+		Observable<String> source = (Consumer<String> onNext, Consumer<Exception> onError, Runnable onCompleted) -> {
 			onNext.accept(hello);
 			onCompleted.run();
 			onError.accept(expectedException);
@@ -97,7 +97,7 @@ public abstract class AbstractSubjectObserverTestBase {
 
 	@Test
 	public void testThatObservationsAfterCompletedAreIgnored() {
-		Observable<String> source = (Consumer<String> onNext, Consumer<Throwable> onError, Runnable onCompleted) -> {
+		Observable<String> source = (Consumer<String> onNext, Consumer<Exception> onError, Runnable onCompleted) -> {
 			onNext.accept(hello);
 			onCompleted.run();
 			onNext.accept(world);
@@ -114,7 +114,7 @@ public abstract class AbstractSubjectObserverTestBase {
 
 	@Test
 	public void testThatObservationsAfterErrorAreIgnored() {
-		Observable<String> source = (Consumer<String> onNext, Consumer<Throwable> onError, Runnable onCompleted) -> {
+		Observable<String> source = (Consumer<String> onNext, Consumer<Exception> onError, Runnable onCompleted) -> {
 			onNext.accept(hello);
 			onError.accept(expectedException);
 			onNext.accept(world);

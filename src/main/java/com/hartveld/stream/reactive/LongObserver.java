@@ -4,7 +4,7 @@ public interface LongObserver {
 
 	void onNext(long value);
 
-	void onError(Throwable e);
+	void onError(Exception e);
 
 	void onCompleted();
 

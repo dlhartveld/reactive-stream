@@ -40,7 +40,7 @@ public interface Observable<T> extends Stream<T> {
 	 *
 	 * @return An {@link AutoCloseable} that can be used to cancel the subscription.
 	 */
-	AutoCloseable subscribe(Consumer<T> onNext, Consumer<Throwable> onError, Runnable onCompleted);
+	AutoCloseable subscribe(Consumer<T> onNext, Consumer<Exception> onError, Runnable onCompleted);
 
 	/**
 	 * Subscribe to this {@link Observable}.
@@ -61,7 +61,7 @@ public interface Observable<T> extends Stream<T> {
 	 *
 	 * @return An {@link AutoCloseable} that can be used to cancel the subscription.
 	 */
-	default AutoCloseable subscribe(Consumer<T> onNext, Consumer<Throwable> onError) {
+	default AutoCloseable subscribe(Consumer<T> onNext, Consumer<Exception> onError) {
 		return subscribe(onNext, onError, () -> { });
 	}
 

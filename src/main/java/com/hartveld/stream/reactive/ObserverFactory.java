@@ -16,7 +16,7 @@ public class ObserverFactory {
 	 * @param onNext      A lambda expression that executes on notification for new values. Must be
 	 *                       non-<code>null</code>. See also {@link Observer#onNext(java.lang.Object)}.
 	 * @param onError     A lambda expression that executes on error notification. Must be non-<code>null</code>. See
-	 *                       also {@link Observer#onError(java.lang.Throwable)}.
+	 *                       also {@link Observer#onError(java.lang.Exception)}.
 	 * @param onCompleted A lambda expression that executes on completion of the observable. Must be
 	 *                       non-<code>null</code>. See also {@link Observer#onCompleted()}.
 	 *
@@ -25,7 +25,7 @@ public class ObserverFactory {
 	 * @see Observer
 	 * @see Observable
 	 */
-	public static <T> Observer<T> createObserver(Consumer<T> onNext, Consumer<Throwable> onError, Runnable onCompleted) {
+	public static <T> Observer<T> createObserver(Consumer<T> onNext, Consumer<Exception> onError, Runnable onCompleted) {
 		checkNotNull(onNext, "onNext must be non-null");
 		checkNotNull(onError, "onError must be non-null");
 		checkNotNull(onCompleted, "onCompleted must be non-null");
