@@ -9,15 +9,15 @@
 	<name>Hartveld.COM - Reactive Stream</name>
 
 	<prerequisites>
-		<maven>3.0.4</maven>
+		<maven>3.0.5</maven>
 	</prerequisites>
 
 	<properties>
 		<version.java>1.8</version.java>
 
-		<version.slf4j>1.7.2</version.slf4j>
-		<version.logback>1.0.9</version.logback>
-		<version.google.guava>13.0.1</version.google.guava>
+		<version.slf4j>1.7.4</version.slf4j>
+		<version.logback>1.0.10</version.logback>
+		<version.google.guava>14.0.1</version.google.guava>
 		<version.apache.commons-lang>2.6</version.apache.commons-lang>
 		<version.apache.commons-lang3>3.1</version.apache.commons-lang3>
 
