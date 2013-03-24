@@ -88,7 +88,7 @@ public class BasicSubject<T, Source> implements Subject<T> {
 		observers.values().stream().forEach(observer -> observer.onCompleted());
 	}
 
-	protected Source onSubscribe(final Observer<T> observer) { return null; };
+	protected Source onSubscribe(final Observer<T> observer) { return null; }
 
 	protected void onClose(final Source source) { }
 

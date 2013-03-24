@@ -379,4 +379,17 @@ public interface Observable<T> extends Stream<T> {
 		return new ThrottleOp<>(this, time, unit);
 	}
 
+	/**
+	 * Merge two observables into one.
+	 * <p>
+	 * When an error occurs in either of the streams, a notification is sent to subscribers, after which no more notifications will follow from either stream.
+	 *
+	 * @param that The other {@link Observable}.
+	 *
+	 * @return The merged observable stream.
+	 */
+	default Observable<T> merge(final Observable<T> that) {
+		return new MergeOp<>(this, that);
+	}
+
 }
