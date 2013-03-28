@@ -27,6 +27,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@FunctionalInterface
 public interface Observable<T> extends Stream<T> {
 
 	static final Logger LOG = LoggerFactory.getLogger(Observable.class);
@@ -134,17 +135,17 @@ public interface Observable<T> extends Stream<T> {
 	}
 
 	@Override
-	default IntObservable map(ToIntFunction<? super T> mapper) {
+	default IntObservable mapToInt(ToIntFunction<? super T> mapper) {
 		throw new NotImplementedException();
 	}
 
 	@Override
-	default LongObservable map(ToLongFunction<? super T> mapper) {
+	default LongObservable mapToLong(ToLongFunction<? super T> mapper) {
 		throw new NotImplementedException();
 	}
 
 	@Override
-	default DoubleObservable map(ToDoubleFunction<? super T> mapper) {
+	default DoubleObservable mapToDouble(ToDoubleFunction<? super T> mapper) {
 		throw new NotImplementedException();
 	}
 
@@ -166,17 +167,17 @@ public interface Observable<T> extends Stream<T> {
 	}
 
 	@Override
-	default IntObservable flatMap(FlatMapper.ToInt<? super T> mapper) {
+	default IntObservable flatMapToInt(FlatMapper.ToInt<? super T> mapper) {
 		throw new NotImplementedException();
 	}
 
 	@Override
-	default LongObservable flatMap(FlatMapper.ToLong<? super T> mapper) {
+	default LongObservable flatMapToLong(FlatMapper.ToLong<? super T> mapper) {
 		throw new NotImplementedException();
 	}
 
 	@Override
-	default DoubleObservable flatMap(FlatMapper.ToDouble<? super T> mapper) {
+	default DoubleObservable flatMapToDouble(FlatMapper.ToDouble<? super T> mapper) {
 		throw new NotImplementedException();
 	}
 
@@ -197,6 +198,11 @@ public interface Observable<T> extends Stream<T> {
 
 	@Override
 	default void forEach(Consumer<? super T> consumer) {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	default void forEachOrdered(Consumer<? super T> consumer) {
 		throw new NotImplementedException();
 	}
 
@@ -366,11 +372,6 @@ public interface Observable<T> extends Stream<T> {
 	@Override
 	default boolean isParallel() {
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	default int getStreamFlags() {
-		throw new NotImplementedException();
 	}
 
 	/**

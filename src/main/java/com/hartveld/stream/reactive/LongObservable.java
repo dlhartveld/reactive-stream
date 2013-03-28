@@ -1,5 +1,6 @@
 package com.hartveld.stream.reactive;
 
+import java.util.LongSummaryStatistics;
 import java.util.OptionalDouble;
 import java.util.OptionalLong;
 import java.util.PrimitiveIterator;
@@ -17,10 +18,10 @@ import java.util.function.LongUnaryOperator;
 import java.util.function.ObjLongConsumer;
 import java.util.function.Supplier;
 import java.util.stream.FlatMapper;
-import java.util.stream.LongStatistics;
 import java.util.stream.LongStream;
 import org.apache.commons.lang.NotImplementedException;
 
+@FunctionalInterface
 public interface LongObservable extends LongStream {
 
 	AutoCloseable subscribe(LongConsumer onNext, Consumer<Exception> onError, Runnable onCompleted);
@@ -36,7 +37,7 @@ public interface LongObservable extends LongStream {
 
 	@Override
 	default Observable<Long> boxed() {
-		return map((LongFunction<Long>) i -> Long.valueOf(i));
+		return mapToObj((LongFunction<Long>) i -> Long.valueOf(i));
 	}
 
 	@Override
@@ -45,17 +46,17 @@ public interface LongObservable extends LongStream {
 	}
 
 	@Override
-	default <U> Observable<U> map(LongFunction<U> mapper) {
+	default <U> Observable<U> mapToObj(LongFunction<U> mapper) {
 		throw new NotImplementedException();
 	}
 
 	@Override
-	default IntObservable map(LongToIntFunction mapper) {
+	default IntObservable mapToInt(LongToIntFunction mapper) {
 		throw new NotImplementedException();
 	}
 
 	@Override
-	default DoubleObservable map(LongToDoubleFunction mapper) {
+	default DoubleObservable mapToDouble(LongToDoubleFunction mapper) {
 		throw new NotImplementedException();
 	}
 
@@ -88,7 +89,7 @@ public interface LongObservable extends LongStream {
 	default LongObservable distinct() {
 		// @@@ While functional and quick to implement this approach is not very efficient.
 		//     An efficient version requires an long-specific map/set implementation.
-		return boxed().distinct().map(i -> (long) i);
+		return boxed().distinct().mapToLong(i -> (long) i);
 	}
 
 	@Override
@@ -157,6 +158,11 @@ public interface LongObservable extends LongStream {
 	}
 
 	@Override
+	default void forEachOrdered(LongConsumer consumer) {
+		throw new NotImplementedException();
+	}
+
+	@Override
 	default void forEachUntilCancelled(LongConsumer consumer, BooleanSupplier until) {
 		throw new NotImplementedException();
 	}
@@ -188,11 +194,6 @@ public interface LongObservable extends LongStream {
 	}
 
 	@Override
-	default LongStatistics statistics() {
-		throw new NotImplementedException();
-	}
-
-	@Override
 	default long sum() {
 		throw new NotImplementedException();
 	}
@@ -214,12 +215,12 @@ public interface LongObservable extends LongStream {
 	}
 
 	@Override
-	default int getStreamFlags() {
+	default <R> R collect(Supplier<R> resultFactory, ObjLongConsumer<R> accumulator, BiConsumer<R, R> combiner) {
 		throw new NotImplementedException();
 	}
 
 	@Override
-	default <R> R collect(Supplier<R> resultFactory, ObjLongConsumer<R> accumulator, BiConsumer<R, R> combiner) {
+	default LongSummaryStatistics summaryStatistics() {
 		throw new NotImplementedException();
 	}
 

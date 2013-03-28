@@ -1,5 +1,6 @@
 package com.hartveld.stream.reactive;
 
+import java.util.IntSummaryStatistics;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.PrimitiveIterator;
@@ -18,11 +19,11 @@ import java.util.function.ObjIntConsumer;
 import java.util.function.Supplier;
 import java.util.stream.DoubleStream;
 import java.util.stream.FlatMapper;
-import java.util.stream.IntStatistics;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import org.apache.commons.lang.NotImplementedException;
 
+@FunctionalInterface
 public interface IntObservable extends IntStream {
 
 	AutoCloseable subscribe(IntConsumer onNext, Consumer<Exception> onError, Runnable onCompleted);
@@ -43,7 +44,7 @@ public interface IntObservable extends IntStream {
 
 	@Override
 	default Observable<Integer> boxed() {
-        return map((IntFunction<Integer>) i -> Integer.valueOf(i));
+        return mapToObj((IntFunction<Integer>) i -> Integer.valueOf(i));
     }
 
 	@Override
@@ -52,17 +53,17 @@ public interface IntObservable extends IntStream {
 	}
 
 	@Override
-	default <U> Observable<U> map(IntFunction<U> mapper) {
+	default <U> Observable<U> mapToObj(IntFunction<U> mapper) {
 		throw new NotImplementedException();
 	}
 
 	@Override
-	default DoubleStream map(IntToDoubleFunction mapper) {
+	default DoubleStream mapToDouble(IntToDoubleFunction mapper) {
 		throw new NotImplementedException();
 	}
 
 	@Override
-	default LongStream map(IntToLongFunction mapper) {
+	default LongStream mapToLong(IntToLongFunction mapper) {
 		throw new NotImplementedException();
 	}
 
@@ -95,7 +96,7 @@ public interface IntObservable extends IntStream {
 	default IntObservable distinct() {
         // @@@ While functional and quick to implement this approach is not very efficient.
         //     An efficient version requires an int-specific map/set implementation.
-        return boxed().distinct().map(i -> (int) i);
+        return boxed().distinct().mapToInt(i -> (int) i);
     }
 
     @Override
@@ -163,6 +164,11 @@ public interface IntObservable extends IntStream {
 		throw new NotImplementedException();
 	}
 
+	@Override
+	default void forEachOrdered(IntConsumer consumer) {
+		throw new NotImplementedException();
+	}
+
     @Override
 	default void forEachUntilCancelled(IntConsumer consumer, BooleanSupplier until) {
 		throw new NotImplementedException();
@@ -194,11 +200,6 @@ public interface IntObservable extends IntStream {
 	}
 
 	@Override
-	default IntStatistics statistics() {
-		throw new NotImplementedException();
-	}
-
-	@Override
 	default int sum() {
 		throw new NotImplementedException();
 	}
@@ -219,12 +220,12 @@ public interface IntObservable extends IntStream {
 	}
 
 	@Override
-	default int getStreamFlags() {
+	default <R> R collect(Supplier<R> resultFactory, ObjIntConsumer<R> accumulator, BiConsumer<R, R> combiner) {
 		throw new NotImplementedException();
 	}
 
 	@Override
-	default <R> R collect(Supplier<R> resultFactory, ObjIntConsumer<R> accumulator, BiConsumer<R, R> combiner) {
+	default IntSummaryStatistics summaryStatistics() {
 		throw new NotImplementedException();
 	}
 

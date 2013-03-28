@@ -1,5 +1,6 @@
 package com.hartveld.stream.reactive;
 
+import java.util.DoubleSummaryStatistics;
 import java.util.OptionalDouble;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;
@@ -15,11 +16,11 @@ import java.util.function.DoubleToLongFunction;
 import java.util.function.DoubleUnaryOperator;
 import java.util.function.ObjDoubleConsumer;
 import java.util.function.Supplier;
-import java.util.stream.DoubleStatistics;
 import java.util.stream.DoubleStream;
 import java.util.stream.FlatMapper;
 import org.apache.commons.lang.NotImplementedException;
 
+@FunctionalInterface
 public interface DoubleObservable extends DoubleStream {
 
 	AutoCloseable subscribe(DoubleConsumer onNext, Consumer<Exception> onError, Runnable onCompleted);
@@ -40,7 +41,7 @@ public interface DoubleObservable extends DoubleStream {
 
 	@Override
 	default Observable<Double> boxed() {
-		return map((DoubleFunction<Double>) i -> Double.valueOf(i));
+		return mapToObj((DoubleFunction<Double>) i -> Double.valueOf(i));
 	}
 
 	@Override
@@ -49,17 +50,17 @@ public interface DoubleObservable extends DoubleStream {
 	}
 
 	@Override
-	default <U> Observable<U> map(DoubleFunction<U> mapper) {
+	default <U> Observable<U> mapToObj(DoubleFunction<U> mapper) {
 		throw new NotImplementedException();
 	}
 
 	@Override
-	default IntObservable map(DoubleToIntFunction mapper) {
+	default IntObservable mapToInt(DoubleToIntFunction mapper) {
 		throw new NotImplementedException();
 	}
 
 	@Override
-	default LongObservable map(DoubleToLongFunction mapper) {
+	default LongObservable mapToLong(DoubleToLongFunction mapper) {
 		throw new NotImplementedException();
 	}
 
@@ -92,7 +93,7 @@ public interface DoubleObservable extends DoubleStream {
 	default DoubleObservable distinct() {
 		// @@@ While functional and quick to implement this approach is not very efficient.
 		//     An efficient version requires an double-specific map/set implementation.
-		return boxed().distinct().map(i -> (double) i);
+		return boxed().distinct().mapToDouble(i -> (double) i);
 	}
 
 	@Override
@@ -161,6 +162,11 @@ public interface DoubleObservable extends DoubleStream {
 	}
 
 	@Override
+	default void forEachOrdered(DoubleConsumer consumer) {
+		throw new NotImplementedException();
+	}
+
+	@Override
 	default void forEachUntilCancelled(DoubleConsumer consumer, BooleanSupplier until) {
 		throw new NotImplementedException();
 	}
@@ -191,11 +197,6 @@ public interface DoubleObservable extends DoubleStream {
 	}
 
 	@Override
-	default DoubleStatistics statistics() {
-		throw new NotImplementedException();
-	}
-
-	@Override
 	default double sum() {
 		throw new NotImplementedException();
 	}
@@ -206,12 +207,12 @@ public interface DoubleObservable extends DoubleStream {
 	}
 
 	@Override
-	default int getStreamFlags() {
+	default <R> R collect(Supplier<R> resultFactory, ObjDoubleConsumer<R> accumulator, BiConsumer<R, R> combiner) {
 		throw new NotImplementedException();
 	}
 
 	@Override
-	default <R> R collect(Supplier<R> resultFactory, ObjDoubleConsumer<R> accumulator, BiConsumer<R, R> combiner) {
+	default DoubleSummaryStatistics summaryStatistics() {
 		throw new NotImplementedException();
 	}
 

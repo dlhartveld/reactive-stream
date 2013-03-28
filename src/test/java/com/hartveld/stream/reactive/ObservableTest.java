@@ -4,9 +4,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import com.hartveld.stream.reactive.Observable;
-import com.hartveld.stream.reactive.Observer;
-import com.hartveld.stream.reactive.ObservableFactory;
 import com.hartveld.stream.reactive.tests.AbstractSubjectObserverTestBase;
 import org.junit.Test;
 
