@@ -10,9 +10,6 @@ import com.hartveld.stream.reactive.ObservableFactory;
 import com.hartveld.stream.reactive.Observer;
 import com.hartveld.stream.reactive.concurrency.Schedulers;
 import com.hartveld.stream.reactive.tests.AbstractSubjectObserverTestBase;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
 public class ObserveOnTest extends AbstractSubjectObserverTestBase {
@@ -25,9 +22,8 @@ public class ObserveOnTest extends AbstractSubjectObserverTestBase {
 	@Test
 	public void testThatObserverIsNotifiedOnBackgroundThreadWithObserveOn() throws Exception {
 		long mainThreadId = Thread.currentThread().getId();
-		ExecutorService svc = Executors.newFixedThreadPool(1);
-		Observable<String> source = ObservableFactory.observableOf(hello, world);
-		AutoCloseable subscription = source.observeOn(svc).subscribe(
+		final Observable<String> source = ObservableFactory.observableOf(hello, world);
+		final AutoCloseable subscription = source.observeOn(Schedulers.DEFAULT).subscribe(
 			text -> {
 				switch(text) {
 				case hello:
@@ -52,8 +48,7 @@ public class ObserveOnTest extends AbstractSubjectObserverTestBase {
 			}
 		);
 
-		svc.shutdown();
-		assertThat("ExecutorService tasks failed to terminate", svc.awaitTermination(1, TimeUnit.SECONDS), is(true));
+		Thread.sleep(500);
 
 		subscription.close();
 

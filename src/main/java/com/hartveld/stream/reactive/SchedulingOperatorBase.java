@@ -2,22 +2,22 @@ package com.hartveld.stream.reactive;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.concurrent.Executor;
+import com.hartveld.stream.reactive.concurrency.Scheduler;
 
-abstract class SchedulingOperatorBase<T, R> extends OperatorBase<T, R> {
+abstract class SchedulingOperatorBase<T, R, Abs, Rel> extends OperatorBase<T, R> {
 
-	private final Executor executor;
+	private final Scheduler<Abs, Rel> scheduler;
 
-	protected SchedulingOperatorBase(final Observable<T> source, final Executor executor) {
+	protected SchedulingOperatorBase(final Observable<T> source, final Scheduler<Abs, Rel> scheduler) {
 		super(source);
 
-		checkNotNull(executor, "executor");
+		checkNotNull(scheduler, "scheduler");
 
-		this.executor = executor;
-	};
+		this.scheduler = scheduler;
+	}
 
 	protected final void schedule(final Runnable runnable) {
-		this.executor.execute(runnable);
+		this.scheduler.schedule(runnable);
 	}
 
 }

@@ -3,23 +3,23 @@ package com.hartveld.stream.reactive.subjects;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.hartveld.stream.reactive.Observer;
+import com.hartveld.stream.reactive.concurrency.Scheduler;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TaskSubject<T> extends BasicSubject<T, Callable<T>> implements Subject<T> {
+public class TaskSubject<T, A, R> extends BasicSubject<T, Callable<T>> implements Subject<T> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TaskSubject.class);
 
-	private final Executor executor;
+	private final Scheduler<A, R> scheduler;
 	private final Callable<T> task;
 
-	public TaskSubject(final Executor executor, final Callable<T> task) {
-		checkNotNull(executor, "executor");
+	public TaskSubject(final Scheduler<A, R> scheduler, final Callable<T> task) {
+		checkNotNull(scheduler, "scheduler");
 		checkNotNull(task, "task");
 
-		this.executor = executor;
+		this.scheduler = scheduler;
 		this.task = task;
 	}
 
@@ -27,7 +27,7 @@ public class TaskSubject<T> extends BasicSubject<T, Callable<T>> implements Subj
 	protected Callable<T> onSubscribe(final Observer<T> observer) {
 		LOG.trace("Scheduling task on executor ...");
 
-		executor.execute(() -> {
+		scheduler.schedule(() -> {
 			try {
 				final T result = task.call();
 				onNext(result);

@@ -5,7 +5,9 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import com.hartveld.stream.reactive.Observable;
 import com.hartveld.stream.reactive.Observer;
-import java.util.concurrent.Executor;
+import com.hartveld.stream.reactive.concurrency.Scheduler;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +29,7 @@ public abstract class AbstractSubjectObserverTestBase {
 	protected boolean completed;
 
 	@Mock
-	protected Executor scheduler;
+	protected Scheduler<Instant, Duration> scheduler;
 
 	@Mock
 	protected Observer<String> target;

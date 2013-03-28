@@ -1,16 +1,15 @@
 package com.hartveld.stream.reactive.concurrency;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import javax.swing.SwingUtilities;
+import java.time.Duration;
+import java.time.Instant;
 
 public class Schedulers {
 
-	public static final Executor DEFAULT = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+	public static final Scheduler<Instant, Duration> DEFAULT = new DefaultScheduler();
 
-	public static final Executor EDT = SwingUtilities::invokeLater;
+	public static final Scheduler<Instant, Duration> EDT = new SwingEDTScheduler();
 
-	public static final Executor IMMEDIATE = (runnable) -> runnable.run();
+	public static final Scheduler<Instant, Duration> IMMEDIATE = new ImmediateScheduler();
 
 	private Schedulers() { }
 

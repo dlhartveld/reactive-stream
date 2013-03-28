@@ -8,6 +8,8 @@ import static org.mockito.Mockito.when;
 import com.hartveld.stream.reactive.Observable;
 import com.hartveld.stream.reactive.Observer;
 import com.hartveld.stream.reactive.concurrency.Schedulers;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.concurrent.Callable;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +22,7 @@ public class TaskSubjectTest extends BasicSubjectTest {
 
 	private static final String VALUE = "Hello, world!";
 
-	private TaskSubject<String> subject;
+	private TaskSubject<String, Instant, Duration> subject;
 
 	@Mock
 	private Callable<String> task;
@@ -43,7 +45,7 @@ public class TaskSubjectTest extends BasicSubjectTest {
 	public void testThatExecutorMustExecuteOnSubscription() {
 		this.subject.subscribe(target);
 
-		verify(scheduler).execute(any(Runnable.class));
+		verify(scheduler).schedule(any(Runnable.class));
 	}
 
 	@Test

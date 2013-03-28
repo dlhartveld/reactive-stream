@@ -20,7 +20,7 @@ abstract class OperatorBase<T, R> implements Observable<R> {
 
 	@Override
 	public AutoCloseable subscribe(final Consumer<R> onNext, final Consumer<Exception> onError, final Runnable onCompleted) {
-		return source.subscribe(
+		this.sourceSubscription = source.subscribe(
 			el -> {
 				if (stopped.get()) {
 					return;
@@ -51,6 +51,8 @@ abstract class OperatorBase<T, R> implements Observable<R> {
 				onCompleted(onCompleted);
 			}
 		);
+
+		return this.sourceSubscription;
 	}
 
 	protected synchronized final void unsubscribe() {

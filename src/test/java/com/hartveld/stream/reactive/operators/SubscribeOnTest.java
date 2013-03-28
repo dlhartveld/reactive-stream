@@ -30,7 +30,7 @@ public class SubscribeOnTest extends AbstractSubjectObserverTestBase {
 
 		subscription.close();
 
-		verify(scheduler, times(2)).execute(any(Runnable.class));
+		verify(scheduler, times(2)).schedule(any(Runnable.class));
 	}
 
 }

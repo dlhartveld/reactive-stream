@@ -2,13 +2,13 @@ package com.hartveld.stream.reactive;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.concurrent.Executor;
+import com.hartveld.stream.reactive.concurrency.Scheduler;
 import java.util.function.Consumer;
 
-class SubscribeOnOp<T> extends SchedulingOperatorBase<T, T> {
+class SubscribeOnOp<T, A, R> extends SchedulingOperatorBase<T, T, A, R> {
 
-	public SubscribeOnOp(final Observable<T> source, final Executor executor) {
-		super(source, executor);
+	SubscribeOnOp(final Observable<T> source, final Scheduler<A, R> scheduler) {
+		super(source, scheduler);
 	}
 
 	@Override

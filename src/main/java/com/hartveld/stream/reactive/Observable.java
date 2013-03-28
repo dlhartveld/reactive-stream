@@ -2,11 +2,11 @@ package com.hartveld.stream.reactive;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.hartveld.stream.reactive.concurrency.Scheduler;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.Spliterator;
-import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -316,35 +316,41 @@ public interface Observable<T> extends Stream<T> {
 	}
 
 	/**
-	 * Execute observations with the given executor.
+	 * Execute observations with the given scheduler.
 	 * <p>
 	 * This operator can be used to schedule the execution of observations on another thread, for example to run them on a background thread.
 	 *
-	 * @param executor The {@link Executor} to execute the observations through. Must be non-<code>null</code>.
+	 * @param <A> TODO
+	 * @param <R> TODO
 	 *
-	 * @return A new {@link Observable} that executes observations for subscribers through the given executor.
+	 * @param scheduler The {@link Scheduler} to execute the observations through. Must be non-<code>null</code>.
+	 *
+	 * @return A new {@link Observable} that executes observations for subscribers through the given scheduler.
 	 */
-	default Observable<T> observeOn(final Executor executor) {
-		LOG.trace("observeOn({})", executor);
+	default <A, R> Observable<T> observeOn(final Scheduler<A, R> scheduler) {
+		LOG.trace("observeOn({})", scheduler);
 
-		checkNotNull(executor, "executor must be non-null");
+		checkNotNull(scheduler, "scheduler must be non-null");
 
-		return new ObserveOnOp<>(this, executor);
+		return new ObserveOnOp<>(this, scheduler);
 	}
 
 	/**
-	 * Execute subscription and closing of the subscription with the given executor.
+	 * Execute subscription and closing of the subscription with the given scheduler.
 	 *
-	 * @param executor The {@link Executor} to execute the subscription and closing of the subscription. Must be non-<code>null</code>.
+	 * @param <A> TODO
+	 * @param <R> TODO
 	 *
-	 * @return A new {@link Observable} that executes subscription and closing of subscription through the given executor.
+	 * @param scheduler The {@link Scheduler} to execute the subscription and closing of the subscription. Must be non-<code>null</code>.
+	 *
+	 * @return A new {@link Observable} that executes subscription and closing of subscription through the given scheduler.
 	 */
-	default Observable<T> subscribeOn(final Executor executor) {
-		LOG.trace("subscribeOn({})", executor);
+	default <A,R> Observable<T> subscribeOn(final Scheduler<A, R> scheduler) {
+		LOG.trace("subscribeOn({})", scheduler);
 
-		checkNotNull(executor, "executor must be non-null");
+		checkNotNull(scheduler, "scheduler must be non-null");
 
-		return new SubscribeOnOp<>(this, executor);
+		return new SubscribeOnOp<>(this, scheduler);
 	}
 
 	@Override
