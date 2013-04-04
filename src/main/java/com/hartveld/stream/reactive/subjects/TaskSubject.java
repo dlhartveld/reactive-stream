@@ -8,7 +8,7 @@ import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TaskSubject<T, A, R> extends BasicSubject<T, Callable<T>> implements Subject<T> {
+public class TaskSubject<T, A, R> extends BasicSubject<T, Callable<T>> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TaskSubject.class);
 
