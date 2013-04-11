@@ -6,7 +6,6 @@ import java.util.OptionalLong;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;
 import java.util.function.BiConsumer;
-import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.LongBinaryOperator;
 import java.util.function.LongConsumer;
@@ -159,11 +158,6 @@ public interface LongObservable extends LongStream {
 
 	@Override
 	default void forEachOrdered(LongConsumer consumer) {
-		throw new NotImplementedException();
-	}
-
-	@Override
-	default void forEachUntilCancelled(LongConsumer consumer, BooleanSupplier until) {
 		throw new NotImplementedException();
 	}
 

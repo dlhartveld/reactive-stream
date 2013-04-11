@@ -6,7 +6,6 @@ import java.util.OptionalInt;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;
 import java.util.function.BiConsumer;
-import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.IntBinaryOperator;
 import java.util.function.IntConsumer;
@@ -44,8 +43,8 @@ public interface IntObservable extends IntStream {
 
 	@Override
 	default Observable<Integer> boxed() {
-        return mapToObj((IntFunction<Integer>) i -> Integer.valueOf(i));
-    }
+		return mapToObj((IntFunction<Integer>) i -> Integer.valueOf(i));
+	}
 
 	@Override
 	default IntObservable map(IntUnaryOperator mapper) {
@@ -69,57 +68,57 @@ public interface IntObservable extends IntStream {
 
 	@Override
 	default IntObservable flatMap(IntFunction<? extends IntStream> mapper) {
-        return flatMap((int i, IntConsumer sink) -> mapper.apply(i).sequential().forEach(sink));
-    }
+		return flatMap((int i, IntConsumer sink) -> mapper.apply(i).sequential().forEach(sink));
+	}
 
 	@Override
 	default IntObservable flatMap(FlatMapper.OfIntToInt mapper) {
 		throw new NotImplementedException();
 	}
 
-    @Override
+	@Override
 	default IntObservable filter(IntPredicate predicate) {
 		throw new NotImplementedException();
 	}
 
-    @Override
+	@Override
 	default IntObservable peek(IntConsumer consumer) {
 		throw new NotImplementedException();
 	}
 
-    @Override
+	@Override
 	default IntObservable sorted() {
 		throw new NotImplementedException();
 	}
 
-    @Override
+	@Override
 	default IntObservable distinct() {
-        // @@@ While functional and quick to implement this approach is not very efficient.
-        //     An efficient version requires an int-specific map/set implementation.
-        return boxed().distinct().mapToInt(i -> (int) i);
-    }
+		// @@@ While functional and quick to implement this approach is not very efficient.
+		//     An efficient version requires an int-specific map/set implementation.
+		return boxed().distinct().mapToInt(i -> (int) i);
+	}
 
-    @Override
+	@Override
 	default IntObservable limit(long maxSize) {
 		throw new NotImplementedException();
 	}
 
-    @Override
+	@Override
 	default IntObservable substream(long startOffset) {
 		throw new NotImplementedException();
 	}
 
-    @Override
+	@Override
 	default IntObservable substream(long startOffset, long endOffset) {
 		throw new NotImplementedException();
 	}
 
-    @Override
+	@Override
 	default IntObservable sequential() {
 		throw new NotImplementedException();
 	}
 
-    @Override
+	@Override
 	default IntObservable parallel() {
 		throw new NotImplementedException();
 	}
@@ -134,32 +133,32 @@ public interface IntObservable extends IntStream {
 		throw new NotImplementedException();
 	}
 
-    @Override
+	@Override
 	default boolean anyMatch(IntPredicate predicate) {
 		throw new NotImplementedException();
 	}
 
-    @Override
+	@Override
 	default boolean allMatch(IntPredicate predicate) {
 		throw new NotImplementedException();
 	}
 
-    @Override
+	@Override
 	default boolean noneMatch(IntPredicate predicate) {
 		throw new NotImplementedException();
 	}
 
-    @Override
+	@Override
 	default OptionalInt findFirst() {
 		throw new NotImplementedException();
 	}
 
-    @Override
+	@Override
 	default OptionalInt findAny() {
 		throw new NotImplementedException();
 	}
 
-    @Override
+	@Override
 	default void forEach(IntConsumer consumer) {
 		throw new NotImplementedException();
 	}
@@ -169,12 +168,7 @@ public interface IntObservable extends IntStream {
 		throw new NotImplementedException();
 	}
 
-    @Override
-	default void forEachUntilCancelled(IntConsumer consumer, BooleanSupplier until) {
-		throw new NotImplementedException();
-	}
-
-    @Override
+	@Override
 	default int[] toArray() {
 		throw new NotImplementedException();
 	}

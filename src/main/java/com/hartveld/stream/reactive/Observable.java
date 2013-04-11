@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
-import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -203,11 +202,6 @@ public interface Observable<T> extends Stream<T> {
 
 	@Override
 	default void forEachOrdered(Consumer<? super T> consumer) {
-		throw new NotImplementedException();
-	}
-
-	@Override
-	default void forEachUntilCancelled(Consumer<? super T> consumer, BooleanSupplier until) {
 		throw new NotImplementedException();
 	}
 

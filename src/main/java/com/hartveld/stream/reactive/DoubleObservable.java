@@ -5,7 +5,6 @@ import java.util.OptionalDouble;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;
 import java.util.function.BiConsumer;
-import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.DoubleBinaryOperator;
 import java.util.function.DoubleConsumer;
@@ -163,11 +162,6 @@ public interface DoubleObservable extends DoubleStream {
 
 	@Override
 	default void forEachOrdered(DoubleConsumer consumer) {
-		throw new NotImplementedException();
-	}
-
-	@Override
-	default void forEachUntilCancelled(DoubleConsumer consumer, BooleanSupplier until) {
 		throw new NotImplementedException();
 	}
 
