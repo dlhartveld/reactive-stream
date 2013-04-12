@@ -1,6 +1,5 @@
 package com.hartveld.stream.reactive.tests.concurrency;
 
-import com.hartveld.stream.reactive.tests.concurrency.Notification;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.hartveld.stream.reactive.Observer;
@@ -10,11 +9,11 @@ import java.util.List;
 
 class RecordingObserver<T> implements Observer<T> {
 
-	private final VirtualTimeScheduler scheduler;
+	private final VirtualTimeScheduler<T> scheduler;
 
 	private final List<Notification<T>> results;
 
-	public RecordingObserver(final VirtualTimeScheduler scheduler) {
+	public RecordingObserver(final VirtualTimeScheduler<T> scheduler) {
 		checkNotNull(scheduler, "scheduler");
 
 		this.scheduler = scheduler;

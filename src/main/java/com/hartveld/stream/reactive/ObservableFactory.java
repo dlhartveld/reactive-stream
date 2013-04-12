@@ -1,6 +1,7 @@
 package com.hartveld.stream.reactive;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.hartveld.stream.reactive.AutoCloseables.noop;
 
 import com.hartveld.stream.reactive.concurrency.Scheduler;
 import com.hartveld.stream.reactive.concurrency.Schedulers;
@@ -11,6 +12,8 @@ public class ObservableFactory {
 
 	@SafeVarargs
 	public static <T> Observable<T> observableOf(T... values) {
+		checkNotNull(values, "values");
+
 		for (T value : values) {
 			checkNotNull(value, "at least one value is null");
 		}
@@ -22,7 +25,7 @@ public class ObservableFactory {
 
 			onCompleted.run();
 
-			return () -> { };
+			return noop();
 		};
 	}
 
@@ -34,7 +37,7 @@ public class ObservableFactory {
 
 			onCompleted.run();
 
-			return () -> { };
+			return noop();
 		};
 	}
 
@@ -46,7 +49,7 @@ public class ObservableFactory {
 
 			onCompleted.run();
 
-			return () -> { };
+			return noop();
 		};
 	}
 
@@ -58,7 +61,7 @@ public class ObservableFactory {
 
 			onCompleted.run();
 
-			return () -> { };
+			return noop();
 		};
 	}
 
@@ -78,7 +81,7 @@ public class ObservableFactory {
 		return (onNext, onError, onCompleted) -> {
 			onCompleted.run();
 
-			return () -> { };
+			return noop();
 		};
 	}
 
@@ -98,7 +101,7 @@ public class ObservableFactory {
 		return (onNext, onError, onCompleted) -> {
 			onError.accept(exception);
 
-			return () -> { };
+			return noop();
 		};
 	}
 
@@ -136,14 +139,13 @@ public class ObservableFactory {
 		checkNotNull(element, "element");
 
 		return ((Observable<T>) (onNext, onError, onCompleted) -> {
-			scheduler.schedule(() -> onNext.accept(element));
-			scheduler.schedule(onCompleted);
+			final AutoCloseable s0 = scheduler.schedule(() -> onNext.accept(element));
+			final AutoCloseable s1 = scheduler.schedule(onCompleted);
 
-			return () -> { };
+			return AutoCloseables.composite(s0, s1);
 		});
 	}
 
-	private ObservableFactory() {
-	}
+	private ObservableFactory() { }
 
 }

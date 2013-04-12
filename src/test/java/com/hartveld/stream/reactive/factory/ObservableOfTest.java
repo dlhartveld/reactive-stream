@@ -8,7 +8,7 @@ import static org.junit.Assert.assertThat;
 import com.hartveld.stream.reactive.Observable;
 import com.hartveld.stream.reactive.ObservableFactory;
 import com.hartveld.stream.reactive.tests.concurrency.Notification;
-import com.hartveld.stream.reactive.tests.concurrency.VirtualTimeScheduler;
+import com.hartveld.stream.reactive.tests.concurrency.DefaultVirtualTimeScheduler;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,13 +23,13 @@ public class ObservableOfTest {
 	private static final String MR = "mr";
 	private static final String X = "x";
 
-	private VirtualTimeScheduler scheduler;
+	private DefaultVirtualTimeScheduler scheduler;
 
 	private Observable<String> source;
 
 	@Before
 	public void setUp() {
-		this.scheduler = new VirtualTimeScheduler();
+		this.scheduler = new DefaultVirtualTimeScheduler();
 
 		this.source = ObservableFactory.observableOf(HELLO, WORLD, MY, NAME, IS, MR, X);
 	}
