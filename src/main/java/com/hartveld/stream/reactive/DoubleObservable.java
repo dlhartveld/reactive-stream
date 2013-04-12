@@ -16,7 +16,6 @@ import java.util.function.DoubleUnaryOperator;
 import java.util.function.ObjDoubleConsumer;
 import java.util.function.Supplier;
 import java.util.stream.DoubleStream;
-import java.util.stream.FlatMapper;
 import org.apache.commons.lang.NotImplementedException;
 
 @FunctionalInterface
@@ -49,7 +48,7 @@ public interface DoubleObservable extends DoubleStream {
 	}
 
 	@Override
-	default <U> Observable<U> mapToObj(DoubleFunction<U> mapper) {
+	default <U> Observable<U> mapToObj(DoubleFunction<? extends U> mapper) {
 		throw new NotImplementedException();
 	}
 
@@ -65,11 +64,6 @@ public interface DoubleObservable extends DoubleStream {
 
 	@Override
 	default DoubleObservable flatMap(DoubleFunction<? extends DoubleStream> mapper) {
-		return flatMap((double i, DoubleConsumer sink) -> mapper.apply(i).sequential().forEach(sink));
-	}
-
-	@Override
-	default DoubleObservable flatMap(FlatMapper.OfDoubleToDouble mapper) {
 		throw new NotImplementedException();
 	}
 
@@ -117,6 +111,11 @@ public interface DoubleObservable extends DoubleStream {
 
 	@Override
 	default DoubleObservable parallel() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	default DoubleObservable unordered() {
 		throw new UnsupportedOperationException();
 	}
 

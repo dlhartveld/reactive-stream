@@ -17,7 +17,6 @@ import java.util.function.IntUnaryOperator;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Supplier;
 import java.util.stream.DoubleStream;
-import java.util.stream.FlatMapper;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import org.apache.commons.lang.NotImplementedException;
@@ -52,7 +51,7 @@ public interface IntObservable extends IntStream {
 	}
 
 	@Override
-	default <U> Observable<U> mapToObj(IntFunction<U> mapper) {
+	default <U> Observable<U> mapToObj(IntFunction<? extends U> mapper) {
 		throw new NotImplementedException();
 	}
 
@@ -68,11 +67,6 @@ public interface IntObservable extends IntStream {
 
 	@Override
 	default IntObservable flatMap(IntFunction<? extends IntStream> mapper) {
-		return flatMap((int i, IntConsumer sink) -> mapper.apply(i).sequential().forEach(sink));
-	}
-
-	@Override
-	default IntObservable flatMap(FlatMapper.OfIntToInt mapper) {
 		throw new NotImplementedException();
 	}
 
@@ -115,12 +109,17 @@ public interface IntObservable extends IntStream {
 
 	@Override
 	default IntObservable sequential() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	default IntObservable parallel() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	default IntObservable unordered() {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

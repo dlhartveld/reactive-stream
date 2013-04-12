@@ -7,7 +7,9 @@ import com.hartveld.stream.reactive.Observable;
 import com.hartveld.stream.reactive.ObservableFactory;
 import com.hartveld.stream.reactive.Observer;
 import com.hartveld.stream.reactive.tests.AbstractSubjectObserverTestBase;
-import java.util.stream.FlatMapper;
+import java.util.Arrays;
+import java.util.function.Function;
+import java.util.stream.Stream;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +20,7 @@ public class FlatMapTest extends AbstractSubjectObserverTestBase {
 
 	@Override
 	protected void initializeFor(Observable<String> source, Observer<String> target) {
-		final FlatMapper<String, String> m = (x, sink) -> {
-			for (String s : x.split(",")) {
-				sink.accept(s);
-			}
-		};
-
-		source.flatMap(m).subscribe(target);
+		source.flatMap(split(",")).subscribe(target);
 	}
 
 	@Test
@@ -43,16 +39,8 @@ public class FlatMapTest extends AbstractSubjectObserverTestBase {
 		verifyNoMoreInteractions(target);
 	}
 
-	private FlatMapper<String, String> split(String regex) {
-		return (x, sink) -> {
-			LOG.trace("Mapping: {}", x);
-			for (String s : x.split(regex)) {
-				final String trimmed = s.trim();
-				LOG.trace("Flattened: {}", trimmed);
-				sink.accept(trimmed);
-			}
-			LOG.trace("Mapping {} done.", x);
-		};
+	private static Function<String, Stream<String>> split(String regex) {
+		return x -> Arrays.stream(x.split(regex));
 	}
 
 }

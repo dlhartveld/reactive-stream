@@ -1,7 +1,6 @@
 package com.hartveld.stream.reactive;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.hartveld.stream.reactive.concurrency.Scheduler;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -20,7 +19,9 @@ import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
 import java.util.function.ToLongFunction;
 import java.util.stream.Collector;
-import java.util.stream.FlatMapper;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
@@ -149,15 +150,7 @@ public interface Observable<T> extends Stream<T> {
 	}
 
 	@Override
-	default <R> Observable<R> flatMap(final Function<T, Stream<? extends R>> mapper) {
-		LOG.trace("flatMap()");
-
-        // We can do better than this, by polling cancellationRequested when stream is infinite
-        return flatMap((T t, Consumer<R> sink) -> mapper.apply(t).sequential().forEach(sink));
-    }
-
-	@Override
-	default <R> Observable<R> flatMap(final FlatMapper<? super T, R> mapper) {
+	default <R> Observable<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper) {
 		LOG.trace("flatMap()");
 
 		checkNotNull(mapper, "mapper");
@@ -166,17 +159,17 @@ public interface Observable<T> extends Stream<T> {
 	}
 
 	@Override
-	default IntObservable flatMapToInt(FlatMapper.ToInt<? super T> mapper) {
+	default IntObservable flatMapToInt(Function<? super T, ? extends IntStream> mapper) {
 		throw new NotImplementedException();
 	}
 
 	@Override
-	default LongObservable flatMapToLong(FlatMapper.ToLong<? super T> mapper) {
+	default LongObservable flatMapToLong(Function<? super T, ? extends LongStream> mapper) {
 		throw new NotImplementedException();
 	}
 
 	@Override
-	default DoubleObservable flatMapToDouble(FlatMapper.ToDouble<? super T> mapper) {
+	default DoubleObservable flatMapToDouble(Function<? super T, ? extends DoubleStream> mapper) {
 		throw new NotImplementedException();
 	}
 
@@ -256,11 +249,6 @@ public interface Observable<T> extends Stream<T> {
 	}
 
 	@Override
-	default <R> R collectUnordered(Collector<? super T, R> collector) {
-		throw new NotImplementedException();
-	}
-
-	@Override
 	default boolean anyMatch(Predicate<? super T> predicate) {
 		throw new NotImplementedException();
 	}
@@ -286,13 +274,18 @@ public interface Observable<T> extends Stream<T> {
 	}
 
 	@Override
-	default Stream<T> sequential() {
-		throw new NotImplementedException();
+	default Observable<T> sequential() {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	default Stream<T> parallel() {
-		throw new NotImplementedException();
+	default Observable<T> parallel() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	default Observable<T> unordered() {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

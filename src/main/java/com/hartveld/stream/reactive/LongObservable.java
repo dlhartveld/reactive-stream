@@ -16,7 +16,6 @@ import java.util.function.LongToIntFunction;
 import java.util.function.LongUnaryOperator;
 import java.util.function.ObjLongConsumer;
 import java.util.function.Supplier;
-import java.util.stream.FlatMapper;
 import java.util.stream.LongStream;
 import org.apache.commons.lang.NotImplementedException;
 
@@ -45,7 +44,7 @@ public interface LongObservable extends LongStream {
 	}
 
 	@Override
-	default <U> Observable<U> mapToObj(LongFunction<U> mapper) {
+	default <U> Observable<U> mapToObj(LongFunction<? extends U> mapper) {
 		throw new NotImplementedException();
 	}
 
@@ -61,11 +60,6 @@ public interface LongObservable extends LongStream {
 
 	@Override
 	default LongObservable flatMap(LongFunction<? extends LongStream> mapper) {
-		return flatMap((long i, LongConsumer sink) -> mapper.apply(i).sequential().forEach(sink));
-	}
-
-	@Override
-	default LongObservable flatMap(FlatMapper.OfLongToLong mapper) {
 		throw new NotImplementedException();
 	}
 
@@ -108,12 +102,17 @@ public interface LongObservable extends LongStream {
 
 	@Override
 	default LongObservable sequential() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	default LongObservable parallel() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	default LongObservable unordered() {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
