@@ -56,4 +56,5 @@ public interface VirtualTimeScheduler<T> extends Scheduler<Long, Long> {
 	 * @see #run()
 	 */
 	List<Notification<T>> run(final Observable<T> source);
+
 }

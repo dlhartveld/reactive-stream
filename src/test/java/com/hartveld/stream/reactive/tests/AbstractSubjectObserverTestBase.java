@@ -1,5 +1,6 @@
 package com.hartveld.stream.reactive.tests;
 
+import static com.hartveld.stream.reactive.AutoCloseables.noop;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -70,7 +71,7 @@ public abstract class AbstractSubjectObserverTestBase {
 			onError.accept(expectedException);
 			onCompleted.run();
 
-			return () -> { };
+			return noop();
 		};
 
 		initializeFor(source, target);
@@ -87,7 +88,7 @@ public abstract class AbstractSubjectObserverTestBase {
 			onCompleted.run();
 			onError.accept(expectedException);
 
-			return () -> { };
+			return noop();
 		};
 
 		initializeFor(source, target);
@@ -104,7 +105,7 @@ public abstract class AbstractSubjectObserverTestBase {
 			onCompleted.run();
 			onNext.accept(world);
 
-			return () -> { };
+			return noop();
 		};
 
 		initializeFor(source, target);
@@ -121,7 +122,7 @@ public abstract class AbstractSubjectObserverTestBase {
 			onError.accept(expectedException);
 			onNext.accept(world);
 
-			return () -> { };
+			return noop();
 		};
 
 		initializeFor(source, target);
