@@ -37,7 +37,7 @@ public class ReturnTest {
 
 		assertThat(results, contains(
 				onNext(101, hello),
-				onCompleted(101)
+				onCompleted(102)
 		));
 	}
 

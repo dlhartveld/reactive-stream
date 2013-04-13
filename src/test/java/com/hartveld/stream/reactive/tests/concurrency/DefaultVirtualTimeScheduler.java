@@ -18,11 +18,11 @@ public class DefaultVirtualTimeScheduler<T> implements VirtualTimeScheduler<T> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultVirtualTimeScheduler.class);
 
-	private long time;
+	private long time = 0;
+	private long lastScheduleTime = 0;
 
 	private final Queue<Action> actions = new PriorityQueue<>();
 
-	private Observable<T> source = null;
 	private final ForwardingAutoCloseable<Observable<T>> subscription = new ForwardingAutoCloseable<>();
 
 	private final RecordingObserver<T> target = new RecordingObserver<>(this);
@@ -33,7 +33,13 @@ public class DefaultVirtualTimeScheduler<T> implements VirtualTimeScheduler<T> {
 
 		checkNotNull(action, "action");
 
-		final Action a = new Action(this.now() + 1, action);
+		if (this.lastScheduleTime < this.now()) {
+			this.lastScheduleTime = this.now();
+		}
+
+		this.lastScheduleTime++;
+
+		final Action a = new Action(this.lastScheduleTime, action);
 
 		LOG.trace("Scheduling @ {}", a.time);
 		actions.offer(a);
@@ -47,6 +53,10 @@ public class DefaultVirtualTimeScheduler<T> implements VirtualTimeScheduler<T> {
 
 		checkNotNull(action, "action");
 		checkArgument(delay >= 0, "delay < 0");
+
+		if (this.lastScheduleTime < this.now()) {
+			this.lastScheduleTime = this.now();
+		}
 
 		final Action a = new Action(this.now() + delay, action);
 

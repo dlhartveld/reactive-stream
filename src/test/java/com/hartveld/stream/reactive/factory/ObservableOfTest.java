@@ -7,8 +7,8 @@ import static org.junit.Assert.assertThat;
 
 import com.hartveld.stream.reactive.Observable;
 import com.hartveld.stream.reactive.ObservableFactory;
-import com.hartveld.stream.reactive.tests.concurrency.Notification;
 import com.hartveld.stream.reactive.tests.concurrency.DefaultVirtualTimeScheduler;
+import com.hartveld.stream.reactive.tests.concurrency.Notification;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,13 +43,13 @@ public class ObservableOfTest {
 
 		assertThat(results, containsInAnyOrder(
 				onNext(101, HELLO),
-				onNext(101, WORLD),
-				onNext(101, MY),
-				onNext(101, NAME),
-				onNext(101, IS),
-				onNext(101, MR),
-				onNext(101, X),
-				onCompleted(101)
+				onNext(102, WORLD),
+				onNext(103, MY),
+				onNext(104, NAME),
+				onNext(105, IS),
+				onNext(106, MR),
+				onNext(107, X),
+				onCompleted(108)
 		));
 	}
 
