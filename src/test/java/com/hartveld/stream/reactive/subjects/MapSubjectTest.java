@@ -5,7 +5,7 @@ import com.hartveld.stream.reactive.Observer;
 import com.hartveld.stream.reactive.tests.AbstractSubjectObserverTestBase;
 import org.junit.Before;
 
-public class BasicSubjectTest extends AbstractSubjectObserverTestBase {
+public class MapSubjectTest extends AbstractSubjectObserverTestBase {
 
 	private Subject<String, String> subject;
 
@@ -14,13 +14,13 @@ public class BasicSubjectTest extends AbstractSubjectObserverTestBase {
 	public void setUp() {
 		super.setUp();
 
-		this.subject = new BasicSubject<>();
+		this.subject = new MapSubject<>(s -> s);
 	}
 
 	@Override
-	protected void initializeFor(Observable<String> source, Observer<String> target) {
+	protected void initializeFor(final Observable<String> source, final Observer<String> target) {
 		subject.subscribe(target);
-		source.subscribe(subject);
+		source.subscribe(this.subject);
 	}
 
 }
