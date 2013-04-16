@@ -12,6 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ForEachTest {
+
 	private static final String HELLO = "hello";
 	private static final String WORLD = "world";
 	private static final String EXCLAMATION = "!";

@@ -19,7 +19,7 @@ class FlatMapOp<T, R> extends OperatorBase<T, R> {
 	}
 
 	@Override
-	protected void onNext(T element, Consumer<? super R> onNext) {
+	protected void onNext(final T element, final Consumer<? super R> onNext) {
 		this.mapper.apply(element).forEach(onNext);
 	}
 
