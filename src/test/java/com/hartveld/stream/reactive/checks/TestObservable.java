@@ -1,5 +1,6 @@
-package com.hartveld.stream.reactive;
+package com.hartveld.stream.reactive.checks;
 
+import com.hartveld.stream.reactive.Observable;
 import java.util.function.Consumer;
 
 public class TestObservable implements Observable<Object> {

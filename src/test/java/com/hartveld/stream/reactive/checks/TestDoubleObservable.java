@@ -1,5 +1,6 @@
-package com.hartveld.stream.reactive;
+package com.hartveld.stream.reactive.checks;
 
+import com.hartveld.stream.reactive.DoubleObservable;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 
