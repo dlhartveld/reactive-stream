@@ -1,5 +1,7 @@
 package com.hartveld.stream.reactive.subjects;
 
+import com.hartveld.stream.reactive.subjects.AbstractSubject;
+import com.hartveld.stream.reactive.subjects.Subject;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.function.Function;
