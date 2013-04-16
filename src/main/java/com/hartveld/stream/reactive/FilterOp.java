@@ -9,7 +9,7 @@ class FilterOp<T> extends OperatorBase<T, T> {
 
 	private final Predicate<? super T> predicate;
 
-	public FilterOp(final Observable<T> source, final Predicate<? super T> predicate) {
+	FilterOp(final Observable<T> source, final Predicate<? super T> predicate) {
 		super(source);
 
 		checkNotNull(predicate, "predicate");
@@ -18,7 +18,7 @@ class FilterOp<T> extends OperatorBase<T, T> {
 	};
 
 	@Override
-	protected void onNext(T element, Consumer<T> onNext) {
+	protected void onNext(T element, Consumer<? super T> onNext) {
 		if (predicate.test(element)) {
 			onNext.accept(element);
 		}

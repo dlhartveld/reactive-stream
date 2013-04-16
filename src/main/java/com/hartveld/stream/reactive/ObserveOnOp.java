@@ -10,7 +10,7 @@ class ObserveOnOp<T, A, R> extends SchedulingOperatorBase<T, T, A, R> {
 	}
 
 	@Override
-	protected void onNext(final T element, final Consumer<T> onNext) {
+	protected void onNext(final T element, final Consumer<? super T> onNext) {
 		schedule(() -> onNext.accept(element));
 	}
 

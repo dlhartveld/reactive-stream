@@ -20,7 +20,7 @@ class MergeOp<T> implements Observable<T> {
 	private final Observable<T> sourceB;
 	private AutoCloseable subscriptionB;
 
-	public MergeOp(final Observable<T> sourceA, final Observable<T> sourceB) {
+	MergeOp(final Observable<T> sourceA, final Observable<T> sourceB) {
 		checkNotNull(sourceA, "sourceA");
 		checkNotNull(sourceB, "sourceB");
 
@@ -29,7 +29,7 @@ class MergeOp<T> implements Observable<T> {
 	}
 
 	@Override
-	public AutoCloseable subscribe(final Consumer<T> onNext, final Consumer<Exception> onError, final Runnable onCompleted) {
+	public AutoCloseable subscribe(final Consumer<? super T> onNext, final Consumer<Exception> onError, final Runnable onCompleted) {
 		LOG.trace("subscribe()");
 
 		this.subscriptionA = this.sourceA.subscribe(
@@ -53,7 +53,7 @@ class MergeOp<T> implements Observable<T> {
 		unsubscribeFromSources();
 	}
 
-	protected void onNext(final T element, final Consumer<T> onNext, final Consumer<Exception> onError) {
+	protected void onNext(final T element, final Consumer<? super T> onNext, final Consumer<Exception> onError) {
 		LOG.trace("onNext: {}", element);
 
 		if (stopped) {
@@ -106,7 +106,7 @@ class MergeOp<T> implements Observable<T> {
 		}
 	}
 
-	private void onNextA(final T element, final Consumer<T> onNext, final Consumer<Exception> onError) {
+	private void onNextA(final T element, final Consumer<? super T> onNext, final Consumer<Exception> onError) {
 		if (aStopped) {
 			return;
 		}
@@ -134,7 +134,7 @@ class MergeOp<T> implements Observable<T> {
 		aStopped = true;
 	}
 
-	private void onNextB(final T element, final Consumer<T> onNext, final Consumer<Exception> onError) {
+	private void onNextB(final T element, final Consumer<? super T> onNext, final Consumer<Exception> onError) {
 		if (bStopped) {
 			return;
 		}

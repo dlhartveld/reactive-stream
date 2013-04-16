@@ -52,7 +52,7 @@ public class BehaviorSubject<T, Source> extends BasicSubject<T, Source> {
 	}
 
 	@Override
-	protected Source onSubscribe(final Observer<T> observer) {
+	protected Source onSubscribe(final Observer<? super T> observer) {
 		if (current != null) {
 			observer.onNext(current);
 		} else if (error != null) {

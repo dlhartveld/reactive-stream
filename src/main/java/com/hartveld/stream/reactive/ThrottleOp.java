@@ -9,7 +9,7 @@ class ThrottleOp<T> extends OperatorBase<T, T> {
 
 	private final long delay;
 
-	public ThrottleOp(final Observable<T> source, final long delay, final TimeUnit timeUnit) {
+	ThrottleOp(final Observable<T> source, final long delay, final TimeUnit timeUnit) {
 		super(source);
 
 		this.previousTime = 0;
@@ -18,7 +18,7 @@ class ThrottleOp<T> extends OperatorBase<T, T> {
 	}
 
 	@Override
-	protected void onNext(final T element, final Consumer<T> onNext) {
+	protected void onNext(final T element, final Consumer<? super T> onNext) {
 		LOG.trace("onNext: {}", element);
 
 		final long currentTime = System.currentTimeMillis();

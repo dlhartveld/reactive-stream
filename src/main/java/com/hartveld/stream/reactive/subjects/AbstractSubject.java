@@ -15,7 +15,7 @@ public abstract class AbstractSubject<T, R, Source> implements Subject<T, R> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractSubject.class);
 
-	private final Map<AutoCloseable, Observer<R>> observers = new ConcurrentHashMap<>();
+	private final Map<AutoCloseable, Observer<? super R>> observers = new ConcurrentHashMap<>();
 
 	private boolean stopped = false;
 
@@ -24,7 +24,7 @@ public abstract class AbstractSubject<T, R, Source> implements Subject<T, R> {
 	}
 
 	@Override
-	public AutoCloseable subscribe(final Observer<R> observer) {
+	public AutoCloseable subscribe(final Observer<? super R> observer) {
 		LOG.trace("Subscribing new observer: {}", observer);
 
 		final ForwardingAutoCloseable<Source> fac = new ForwardingAutoCloseable<>();
@@ -50,7 +50,7 @@ public abstract class AbstractSubject<T, R, Source> implements Subject<T, R> {
 	}
 
 	@Override
-	public final AutoCloseable subscribe(final Consumer<R> onNext, final Consumer<Exception> onError, final Runnable onCompleted) {
+	public final AutoCloseable subscribe(final Consumer<? super R> onNext, final Consumer<Exception> onError, final Runnable onCompleted) {
 		LOG.trace("Subscribing new forwarding observer ...");
 
 		checkNotNull(onNext, "onNext");
@@ -108,7 +108,7 @@ public abstract class AbstractSubject<T, R, Source> implements Subject<T, R> {
 		observers.values().stream().forEach(observer -> observer.onCompleted());
 	}
 
-	protected Source onSubscribe(final Observer<R> observer) { return null; }
+	protected Source onSubscribe(final Observer<? super R> observer) { return null; }
 
 	protected void onClose(final Source source) { }
 

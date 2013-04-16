@@ -1,6 +1,7 @@
 package com.hartveld.stream.reactive;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.hartveld.stream.reactive.concurrency.Scheduler;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -41,7 +42,7 @@ public interface Observable<T> extends Stream<T> {
 	 *
 	 * @return An {@link AutoCloseable} that can be used to cancel the subscription.
 	 */
-	AutoCloseable subscribe(Consumer<T> onNext, Consumer<Exception> onError, Runnable onCompleted);
+	AutoCloseable subscribe(Consumer<? super T> onNext, Consumer<Exception> onError, Runnable onCompleted);
 
 	/**
 	 * Subscribe to this {@link Observable}.
@@ -50,7 +51,7 @@ public interface Observable<T> extends Stream<T> {
 	 *
 	 * @return An {@link AutoCloseable} that can be used to cancel the subscription.
 	 */
-	default AutoCloseable subscribe(Consumer<T> onNext) {
+	default AutoCloseable subscribe(Consumer<? super T> onNext) {
 		return subscribe(onNext, ex -> { }, () -> { });
 	}
 
@@ -62,7 +63,7 @@ public interface Observable<T> extends Stream<T> {
 	 *
 	 * @return An {@link AutoCloseable} that can be used to cancel the subscription.
 	 */
-	default AutoCloseable subscribe(Consumer<T> onNext, Consumer<Exception> onError) {
+	default AutoCloseable subscribe(Consumer<? super T> onNext, Consumer<Exception> onError) {
 		return subscribe(onNext, onError, () -> { });
 	}
 
@@ -74,7 +75,7 @@ public interface Observable<T> extends Stream<T> {
 	 *
 	 * @return An {@link AutoCloseable} that can be used to cancel the subscription.
 	 */
-	default AutoCloseable subscribe(Consumer<T> onNext, Runnable onCompleted) {
+	default AutoCloseable subscribe(Consumer<? super T> onNext, Runnable onCompleted) {
 		return subscribe(onNext, ex -> { }, onCompleted);
 	}
 
@@ -85,7 +86,7 @@ public interface Observable<T> extends Stream<T> {
 	 *
 	 * @return The {@link AutoCloseable} that can be used to cancel the subscription.
 	 */
-	default AutoCloseable subscribe(Observer<T> observer) {
+	default AutoCloseable subscribe(Observer<? super T> observer) {
 		return subscribe(observer::onNext, observer::onError, observer::onCompleted);
 	}
 
@@ -189,8 +190,12 @@ public interface Observable<T> extends Stream<T> {
 	}
 
 	@Override
-	default void forEach(Consumer<? super T> consumer) {
-		throw new NotImplementedException();
+	default void forEach(final Consumer<? super T> consumer) {
+		LOG.trace("forEach()");
+
+		checkNotNull(consumer, "consumer");
+
+		subscribe(consumer);
 	}
 
 	@Override

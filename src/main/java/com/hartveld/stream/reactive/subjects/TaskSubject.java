@@ -24,7 +24,7 @@ public class TaskSubject<T, A, R> extends BasicSubject<T, Callable<T>> {
 	}
 
 	@Override
-	protected Callable<T> onSubscribe(final Observer<T> observer) {
+	protected Callable<T> onSubscribe(final Observer<? super T> observer) {
 		LOG.trace("Scheduling task on executor ...");
 
 		scheduler.schedule(() -> {
