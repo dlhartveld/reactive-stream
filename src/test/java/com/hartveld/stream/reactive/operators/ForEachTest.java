@@ -4,6 +4,7 @@ import static org.mockito.Mockito.verify;
 
 import com.hartveld.stream.reactive.Observable;
 import com.hartveld.stream.reactive.ObservableFactory;
+import com.hartveld.stream.reactive.concurrency.Schedulers;
 import java.util.function.Consumer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +32,9 @@ public class ForEachTest {
 
 	@Test
 	public void testThatForEachForwardsMultipleElements() {
-		final Observable<String> source = ObservableFactory.observableOf(HELLO, WORLD, EXCLAMATION);
+		final Observable<String> source = ObservableFactory
+				.observableOf(HELLO, WORLD, EXCLAMATION)
+				.observeOn(Schedulers.defaultScheduler());
 
 		source.forEach(target);
 

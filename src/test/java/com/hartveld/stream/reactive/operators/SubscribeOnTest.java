@@ -1,5 +1,6 @@
 package com.hartveld.stream.reactive.operators;
 
+import static com.hartveld.stream.reactive.concurrency.Schedulers.immediateScheduler;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -7,7 +8,6 @@ import static org.mockito.Mockito.verify;
 import com.hartveld.stream.reactive.Observable;
 import com.hartveld.stream.reactive.ObservableFactory;
 import com.hartveld.stream.reactive.Observer;
-import com.hartveld.stream.reactive.concurrency.Schedulers;
 import com.hartveld.stream.reactive.tests.AbstractSubjectObserverTestBase;
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ public class SubscribeOnTest extends AbstractSubjectObserverTestBase {
 
 	@Override
 	protected void initializeFor(Observable<String> source, Observer<String> target) {
-		source.subscribeOn(Schedulers.IMMEDIATE).subscribe(target);
+		source.subscribeOn(immediateScheduler()).subscribe(target);
 	}
 
 	@Test

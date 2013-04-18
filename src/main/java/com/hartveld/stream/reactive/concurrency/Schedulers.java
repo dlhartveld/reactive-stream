@@ -5,11 +5,21 @@ import java.time.Instant;
 
 public class Schedulers {
 
-	public static final Scheduler<Instant, Duration> DEFAULT = new DefaultScheduler();
+	public static Scheduler<Instant, Duration> defaultScheduler() {
+		return defaultScheduler;
+	}
 
-	public static final Scheduler<Instant, Duration> EDT = new SwingEDTScheduler();
+	public static Scheduler<Instant, Duration> eventQueueScheduler() {
+		return eventQueueScheduler;
+	}
 
-	public static final Scheduler<Instant, Duration> IMMEDIATE = new ImmediateScheduler();
+	public static Scheduler<Instant, Duration> immediateScheduler() {
+		return immediateScheduler;
+	}
+
+	private static final DefaultScheduler defaultScheduler = new DefaultScheduler();
+	private static final EventQueueScheduler eventQueueScheduler = new EventQueueScheduler();
+	private static final ImmediateScheduler immediateScheduler = new ImmediateScheduler();
 
 	private Schedulers() { }
 

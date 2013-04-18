@@ -1,5 +1,7 @@
 package com.hartveld.stream.reactive.operators;
 
+import static com.hartveld.stream.reactive.concurrency.Schedulers.defaultScheduler;
+import static com.hartveld.stream.reactive.concurrency.Schedulers.immediateScheduler;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
@@ -8,7 +10,6 @@ import static org.junit.Assert.fail;
 import com.hartveld.stream.reactive.Observable;
 import com.hartveld.stream.reactive.ObservableFactory;
 import com.hartveld.stream.reactive.Observer;
-import com.hartveld.stream.reactive.concurrency.Schedulers;
 import com.hartveld.stream.reactive.tests.AbstractSubjectObserverTestBase;
 import org.junit.Test;
 
@@ -16,14 +17,16 @@ public class ObserveOnTest extends AbstractSubjectObserverTestBase {
 
 	@Override
 	protected void initializeFor(Observable<String> source, Observer<String> target) {
-		source.observeOn(Schedulers.IMMEDIATE).subscribe(target);
+		source.observeOn(immediateScheduler()).subscribe(target);
 	}
 
 	@Test
 	public void testThatObserverIsNotifiedOnBackgroundThreadWithObserveOn() throws Exception {
 		long mainThreadId = Thread.currentThread().getId();
 		final Observable<String> source = ObservableFactory.observableOf(hello, world);
-		final AutoCloseable subscription = source.observeOn(Schedulers.DEFAULT).subscribe(
+		final AutoCloseable subscription = source
+				.observeOn(defaultScheduler())
+				.subscribe(
 			text -> {
 				switch(text) {
 				case hello:

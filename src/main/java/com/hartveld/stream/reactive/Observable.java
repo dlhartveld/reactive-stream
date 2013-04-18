@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
@@ -195,7 +196,25 @@ public interface Observable<T> extends Stream<T> {
 
 		checkNotNull(consumer, "consumer");
 
-		subscribe(consumer);
+		final Thread currentThread = Thread.currentThread();
+
+		final Object o = new Object();
+		subscribe(
+				el -> {
+					synchronized(o) {
+						consumer.accept(el);
+					}
+				},
+				() -> {
+					synchronized(o) {
+						LOG.trace("Unparking thread: {}", currentThread);
+						LockSupport.unpark(currentThread);
+					}
+				}
+		);
+
+		LOG.trace("Parking thread: {}", currentThread);
+		LockSupport.park();
 	}
 
 	@Override
@@ -248,9 +267,26 @@ public interface Observable<T> extends Stream<T> {
 		throw new NotImplementedException();
 	}
 
+	/**
+	 * Collect the sequential values of this {@link Observable} into a result
+	 * value.
+	 *
+	 * @param <R>       The type of the result value.
+	 * @param collector The {@link Collector} that will provide the
+	 *                  resultFactory, accumulator and reducer functions. Must
+	 *                  be non-<code>null</code>.
+	 *
+	 * @return The result value of type R.
+	 *
+	 * @see Stream#collect(java.util.stream.Collector)
+	 */
 	@Override
-	default <R> R collect(Collector<? super T, R> collector) {
-		throw new NotImplementedException();
+	default <R> R collect(final Collector<? super T, R> collector) {
+		LOG.trace("collect(): {}", collector);
+
+		checkNotNull(collector, "collector");
+
+		return new CollectingObserver<>(this, collector).getResult();
 	}
 
 	@Override

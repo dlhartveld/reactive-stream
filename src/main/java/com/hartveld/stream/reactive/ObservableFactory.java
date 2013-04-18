@@ -2,9 +2,9 @@ package com.hartveld.stream.reactive;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.hartveld.stream.reactive.AutoCloseables.noop;
+import static com.hartveld.stream.reactive.concurrency.Schedulers.defaultScheduler;
 
 import com.hartveld.stream.reactive.concurrency.Scheduler;
-import com.hartveld.stream.reactive.concurrency.Schedulers;
 import com.hartveld.stream.reactive.subjects.TaskSubject;
 import java.util.concurrent.Callable;
 
@@ -66,7 +66,7 @@ public class ObservableFactory {
 	}
 
 	public static <T> Observable<T> observableOfTask(final Callable<T> task) {
-		return new TaskSubject<>(Schedulers.DEFAULT, task);
+		return new TaskSubject<>(defaultScheduler(), task);
 	}
 
 	/**

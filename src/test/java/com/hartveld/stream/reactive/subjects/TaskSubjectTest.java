@@ -1,5 +1,6 @@
 package com.hartveld.stream.reactive.subjects;
 
+import static com.hartveld.stream.reactive.concurrency.Schedulers.immediateScheduler;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -7,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import com.hartveld.stream.reactive.Observable;
 import com.hartveld.stream.reactive.Observer;
-import com.hartveld.stream.reactive.concurrency.Schedulers;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.Callable;
@@ -52,7 +52,7 @@ public class TaskSubjectTest extends BasicSubjectTest {
 	public void testThatTaskResultIsForwardedToTarget() throws Exception {
 		when(task.call()).thenReturn(VALUE);
 
-		this.subject = new TaskSubject<>(Schedulers.IMMEDIATE, task);
+		this.subject = new TaskSubject<>(immediateScheduler(), task);
 		this.subject.subscribe(target);
 
 		verify(target).onNext(VALUE);
