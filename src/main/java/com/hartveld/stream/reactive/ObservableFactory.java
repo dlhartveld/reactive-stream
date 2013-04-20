@@ -8,7 +8,7 @@ import com.hartveld.stream.reactive.concurrency.Scheduler;
 import com.hartveld.stream.reactive.subjects.TaskSubject;
 import java.util.concurrent.Callable;
 
-public class ObservableFactory {
+public final class ObservableFactory {
 
 	@SafeVarargs
 	public static <T> Observable<T> observableOf(T... values) {

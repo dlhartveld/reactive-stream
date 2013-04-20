@@ -141,7 +141,7 @@ public class DefaultVirtualTimeScheduler<T> implements VirtualTimeScheduler<T> {
 						this.time, action.time, action);
 			}
 
-			LOG.trace("Running action.runnable ...");
+			LOG.trace("### RUN @ {}: action.runnable ...", this.time);
 			action.runnable.run();
 		}
 	}

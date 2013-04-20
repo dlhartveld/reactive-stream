@@ -40,6 +40,7 @@ abstract class OperatorBase<T, R> implements Observable<R> {
 				}
 
 				stopped.set(true);
+				// TODO: unsubscribe
 				onError(ex, onError);
 			},
 			() -> {
