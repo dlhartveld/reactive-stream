@@ -424,7 +424,22 @@ public interface Observable<T> extends Stream<T> {
 	 * @return The merged observable stream.
 	 */
 	default Observable<T> merge(final Observable<T> that) {
+		LOG.trace("merge(): {}", that);
+
+		checkNotNull(that, "that");
+
 		return new MergeOp<>(this, that);
+	}
+
+	/* This operator is unsafe: It is not possible to check the type of the
+	 * type parameter of 'this', i.e., whether it is indeed an
+	 * Observable<Observable<T>>. Only at runtime will this be detected - a
+	 * ClassCastException will be thrown.
+	 */
+	default public Observable<?> switchToNext() {
+		LOG.trace("switchToNext()");
+
+		return new SwitchOp<>(this);
 	}
 
 }
